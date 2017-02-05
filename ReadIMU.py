@@ -1,5 +1,5 @@
 import time
-from lsm/altimu import AltIMU
+from lsm.altimu import AltIMU
 import math
 
 class ReadIMU(object):
@@ -32,17 +32,17 @@ class ReadIMU(object):
 		gyroList = self.imu.getComplementaryAngles(deltaT=deltaT)
 
 		for i, gyro in enumerate(gyroList):
-				if(not gyro == None):
-					lastGyroList[i] = gyro
-				else:
+			if(not gyro == None):
+				lastGyroList[i] = gyro
+			else:
 				errs += 1
 
 		magList = self.imu.getMagnetometerRaw()
 
 		for i, mag in enumerate(magList):
-					if(not mag == None):
-						lastMagList[i] = mag
-					else:
+			if(not mag == None):
+				lastMagList[i] = mag
+			else:
 				errs += 1
 
 		rot = math.degrees(math.atan2(lastMagList[1], lastMagList[2]) + math.pi)

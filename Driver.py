@@ -1,5 +1,4 @@
 import time
-from datetime import datetime
 import subprocess
 import os
 import RecordVideo
@@ -7,6 +6,7 @@ import ReadIMU
 import ReadGPS
 import SendData
 import MotorController
+import TargetID
 
 class Driver(object):
 
@@ -27,8 +27,9 @@ class Driver(object):
 		print("1...")
 		time.sleep(1)
 
-	def WriteData(self, dictGPS, dictIMU):
+	def WriteData(self, dictGPS, dictIMU, dictVid):
 		data = index + ','
+		
 		data += str(dictGPS["lat"]) + ','
 		data += str(dictGPS["lon"]) + ','
 		data += str(dictGPS["climb"]) + ','
@@ -37,6 +38,7 @@ class Driver(object):
 		data += str(dictGPS["track"]) + ','
 		data += str(dictGPS["errs"]) + ','
 		data += str(dictGPS["time"]) + ','
+		
 		data += str(dictIMU["accX"]) + ','
 		data += str(dictIMU["accY"]) + ','
 		data += str(dictIMU["accZ"]) + ','
@@ -50,7 +52,22 @@ class Driver(object):
 		data += str(dictIMU["rot"]) + ','
 		data += str(dictIMU["errs"]) + ','
 		data += str(dictIMU["time"]) + ','
-		data += str(datetime.now())
+		
+		data += str(dictVid["rTop"]) + ','
+		data += str(dictVid["rBottom"]) + ','
+		data += str(dictVid["rLeft"]) + ','
+		data += str(dictVid["rRight"]) + ','
+		data += str(dictVid["bTop"]) + ','
+		data += str(dictVid["bBottom"]) + ','
+		data += str(dictVid["bLeft"]) + ','
+		data += str(dictVid["bRight"]) + ','
+		data += str(dictVid["yTop"]) + ','
+		data += str(dictVid["yBottom"]) + ','
+		data += str(dictVid["yLeft"]) + ','
+		data += str(dictVid["yRight"]) + ','
+		data += str(dictVid["time"]) + ','
+		
+		data += str(time.time())
 		data += '\n'
 
 		with open("/home/pi/Desktop/PSLT-Fullscale/Data/FlightData.csv", "ab") as dataFile:
@@ -64,13 +81,24 @@ class Driver(object):
 		self.gps = ReadGPS()
 		self.tx = SendData()
 		self.mc = MotorController()
-		self.header = "Index,Lat,Lon,Climb,Alt,Speed,Heading,GPS Errors,GPS Time,Acc X,Acc Y,Acc Z,Gyro X,Gyro Y,Gyro Z,Mag X,Mag Y,Mag Z,Alt,Roll,IMU Errors,IMU Time,Driver Time\n"
+		self.tid = TargetID()
+		self.gpsHeader = "Lat,Lon,Climb,Alt,Speed,Heading,GPS Errors,GPS Time"
+		self.imuHeader = "Acc X,Acc Y,Acc Z,Gyro X,Gyro Y,Gyro Z,Mag X,Mag Y,Mag Z,Alt,Roll,IMU Errors,IMU Time"
+		self.vidHeader = "R Top, R Bottom, R Left, R Right, B Top, B Bottom, B Left, B Right, Y Top, Y Bottom, Y Left, Y Right, Vid Time"
 		self.index = 0
+		self.elapsed = 0
+		self.start = time.time()
+		self.stop = time.time()
 		StartGPS()
 		with open("/home/pi/Desktop/PSLT-Fullscale/Data/FlightData.csv", "wb") as dataFile:
-			dataFile.write(header)
+			dataFile.write("Index," + gpsHeader + ',' + imuHeader + ',' + vidHeader + '\n')
 			dataFile.flush()
 			os.fsync(dataFile.fileno())
+		self.vod.Update(picture=True)
+		self.gps.Update()
+		self.imu.Update()
+		self.tid.Update()
+		print("Initialization finished")
 		quit = False
 		while(not quit):
 			try:
@@ -81,20 +109,30 @@ class Driver(object):
 				quit = True
 
 	def Update(self):
-		self.vid.Update()
+		self.stop = time.time()
+		self.elapsed = self.stop - self.start
+		if(self.elapsed > 1):
+			self.start = time.time()
+			self.elapsed = 0
+			self.vid.Update(picture=True)
+			self.tid.Update()
+		else:
+			self.vid.Update()
 		self.imu.Update()
 		self.gps.Update()
-		WriteData(self.gps.data, self.imu.data)
+		WriteData(self.gps.data, self.imu.data, self.tid.data)
 		self.tx.Update()
 		self.mc.Update()
 		self.index += 1
-		#time.sleep(0.01)
+		#time.sleep(0.01)		
 
 	def End(self):
 		self.vid.End()
 		self.imu.End()
 		self.gps.End()
 		self.tx.End()
+		self.mc.End()
+		self.tid.End()
 		print("Driver is ending")
 		
-if __name__ == "__main__":__init__()
+if __name__ == "__main__": Driver()

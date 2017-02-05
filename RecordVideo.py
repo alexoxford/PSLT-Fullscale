@@ -17,8 +17,9 @@ class RecordVideo(object):
 		print("1...")
 		time.sleep(1)
 
-	def Update(self):
-		self.camera.capture("/home/pi/Desktop/PSLT-Fullscale/Images/img.jpg", use_video_port=True)
+	def Update(self, picture=False):
+		if(picture):
+			self.camera.capture("/home/pi/Desktop/PSLT-Fullscale/Data/img.jpg", use_video_port=True)
 		self.videoFile.flush()
 		os.fsync(self.videoFile.fileno())
 		
