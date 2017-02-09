@@ -1,6 +1,7 @@
 import time
 import subprocess
 import os
+import math
 import RecordVideo
 import ReadIMU
 import ReadGPS
@@ -67,6 +68,8 @@ class Driver(object):
 		data += str(dictVid["yRight"]) + ','
 		data += str(dictVid["time"]) + ','
 		
+		data += str(self.mc.speed) + ','
+		
 		data += str(time.time())
 		data += '\n'
 
@@ -89,14 +92,17 @@ class Driver(object):
 		self.elapsed = 0
 		self.start = time.time()
 		self.stop = time.time()
+		self.flightState = 0
 		StartGPS()
 		with open("/home/pi/Desktop/PSLT-Fullscale/Data/FlightData.csv", "wb") as dataFile:
-			dataFile.write("Index," + gpsHeader + ',' + imuHeader + ',' + vidHeader + '\n')
+			dataFile.write("Index," + gpsHeader + ',' + imuHeader + ',' + vidHeader + ',' + "Motor Speed," + "Driver Time" + '\n')
 			dataFile.flush()
 			os.fsync(dataFile.fileno())
-		self.vod.Update(picture=True)
+		self.vid.Update(picture=True)
 		self.gps.Update()
 		self.imu.Update()
+		self.lastRot = self.imu.data["rot"]
+		self.lastIMUTime = self.imu.data["time"]
 		self.tid.Update()
 		print("Initialization finished")
 		quit = False
@@ -119,12 +125,26 @@ class Driver(object):
 		else:
 			self.vid.Update()
 		self.imu.Update()
+		if(math.fabs(self.imu.data["accX"]) > 2.0 & flightState == 0):
+			flightState = 1
+		if(math.fabs(self.imu.data["accX"]) < 2.0 & flightState == 1):
+			self.mc.startRotation(self.imu.data["rot"])
+			flightState = 2
+		if(flightState == 2 & self.mc.rotate = 3):
+			flightState = 3
 		self.gps.Update()
+		rotRate = 0
+		rot = self.imu.data["rot"]
+		imuTime = self.imu.data["time"]
+		if(rot >= lastRot):
+			rotRate = ((rot - lastRot) / (imuTime - lastIMUTime))
+		else:
+			rotRate = (((360.0 - lastRot) + rot) / (imuTime - lastIMUTime))
+		self.mc.Update(rot, rotRate)
 		WriteData(self.gps.data, self.imu.data, self.tid.data)
 		self.tx.Update()
-		self.mc.Update()
 		self.index += 1
-		#time.sleep(0.01)		
+		#time.sleep(0.01)
 
 	def End(self):
 		self.vid.End()
