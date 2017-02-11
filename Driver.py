@@ -175,8 +175,8 @@ class Driver(object):
 		magZ = self.imu.data["magZ"]
 		imuTime = self.imu.data["time"]
 		
-		delta = self.angle_between((magY, magZ), (lastMagY, lastMagZ))
-		rotRate = delta / (imuTime - lastIMUTime)
+		delta = self.angle_between((magY, magZ), (self.lastMagY, self.lastMagZ))
+		rotRate = delta / (imuTime - self.lastIMUTime)
 		
 		print(rot, rotRate)
 		#self.mc.Update(rot, rotRate)
