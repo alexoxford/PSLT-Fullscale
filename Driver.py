@@ -81,7 +81,7 @@ class Driver(object):
 			os.fsync(dataFile.fileno())
 			
 	def VideoThread(self):
-		self.processing = True
+		self.vidProc = True
 		#testStart = time.time()
 		self.vid.Update(picture=True)
 		#print("Pic: " + str(time.time() - testStart))
@@ -93,10 +93,12 @@ class Driver(object):
 		#testStart = time.time()
 		self.vid.Update(flush=True)
 		#print("Flush: " + str(time.time() - testStart))
-		self.processing = False
+		self.vidProc = False
 		
 	def GPSThread(self):
+		self.gpsProc = True
 		self.gps.Update()
+		self.gpsProc = False
 
 	def __init__(self):
 		self.vid = RecordVideo()
@@ -114,7 +116,8 @@ class Driver(object):
 		self.elapsed = 0
 		self.start = time.time()
 		self.stop = time.time()
-		self.processing = False
+		self.vidProc = False
+		self.gpsProc = False
 		self.flightState = 0
 		with open("/home/pi/Desktop/PSLT-Fullscale/Data/FlightData.csv", "wb") as dataFile:
 			dataFile.write("Index," + self.gpsHeader + ',' + self.imuHeader + ',' + self.vidHeader + ',' + "Motor Speed," + "Driver Time" + '\n')
@@ -138,7 +141,7 @@ class Driver(object):
 
 	def Update(self):
 		testStart = time.time()
-		if(not self.processing):
+		if(not self.vidProc):
 			videoThread = threading.Thread(name="video-thread", target=self.VideoThread)
 			videoThread.start()
 		self.imu.Update()
