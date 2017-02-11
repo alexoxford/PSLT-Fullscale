@@ -54,18 +54,19 @@ class Driver(object):
 		data += str(dictIMU["errs"]) + ','
 		data += str(dictIMU["time"]) + ','
 		
-		data += str(dictVid["rTop"]) + ','
-		data += str(dictVid["rBottom"]) + ','
-		data += str(dictVid["rLeft"]) + ','
-		data += str(dictVid["rRight"]) + ','
+		#data += str(dictVid["rTop"]) + ','
+		#data += str(dictVid["rBottom"]) + ','
+		#data += str(dictVid["rLeft"]) + ','
+		#data += str(dictVid["rRight"]) + ','
 		data += str(dictVid["bTop"]) + ','
 		data += str(dictVid["bBottom"]) + ','
 		data += str(dictVid["bLeft"]) + ','
 		data += str(dictVid["bRight"]) + ','
-		data += str(dictVid["yTop"]) + ','
-		data += str(dictVid["yBottom"]) + ','
-		data += str(dictVid["yLeft"]) + ','
-		data += str(dictVid["yRight"]) + ','
+		#data += str(dictVid["yTop"]) + ','
+		#data += str(dictVid["yBottom"]) + ','
+		#data += str(dictVid["yLeft"]) + ','
+		#data += str(dictVid["yRight"]) + ','
+		data += str(dictVid["index"]) + ','
 		data += str(dictVid["time"]) + ','
 		
 		data += str(self.mc.speed) + ','
@@ -87,7 +88,8 @@ class Driver(object):
 		self.tid = TargetID()
 		self.gpsHeader = "Lat,Lon,Climb,Alt,Speed,Heading,GPS Errors,GPS Time"
 		self.imuHeader = "Acc X,Acc Y,Acc Z,Gyro X,Gyro Y,Gyro Z,Mag X,Mag Y,Mag Z,Alt,Roll,IMU Errors,IMU Time"
-		self.vidHeader = "R Top, R Bottom, R Left, R Right, B Top, B Bottom, B Left, B Right, Y Top, Y Bottom, Y Left, Y Right, Vid Time"
+		#self.vidHeader = "R Top,R Bottom,R Left,R Right,B Top,B Bottom,B Left,B Right,Y Top,Y Bottom,Y Left,Y Right,Vid Index,Vid Time"
+		self.vidHeader = "B Top,B Bottom,B Left,B Right,Vid Index,Vid Time"
 		self.index = 0
 		self.elapsed = 0
 		self.start = time.time()

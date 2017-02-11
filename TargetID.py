@@ -8,10 +8,12 @@ class TargetID(object):
 	def __init__(self):
 		print("TargetID is starting")
 		self.data = {}
-		self.Update()
+		self.index = 0
+		#self.Update()
 		
 	def Update(self):
-		frame = cv2.imread("C:\\Users\\Alex\\Desktop\\test.jpg")
+		#frame = cv2.imread("C:\\Users\\Alex\\Desktop\\test.jpg")
+		frame = cv2.imread("/home/pi/Desktop/PSLT-Fullscale/Data/img.jpg")
 		#hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 		hsv = frame
 		boundaries = [
@@ -104,35 +106,42 @@ class TargetID(object):
 				output = copy.copy(frame)
 				cv2.rectangle(output,(left, top),(left+iWidth, top+iHeight),(0,255,0))
 
-				cv2.imshow("images", np.hstack([frame, output]))
-				cv2.waitKey(0)
+				#cv2.imshow("images", np.hstack([frame, output]))
+				#cv2.waitKey(0)
+				
+				
+				#-----this is temporary-----
+				cv2.imwrite("/home/pi/Desktop/PSLT-Fullscale/Data/output{0}.jpg".format(index), output)
+				#---------------------------
 			else:
 				top = -1
 				bottom = -1
 				left = -1
 				right = -1
+				cv2.imwrite("/home/pi/Desktop/PSLT-Fullscale/Data/output{0}.jpg".format(index), frame)
 				
 			if(i == 0):
-				self.data["rTop"] = top
-				self.data["rBottom"] = bottom
-				self.data["rLeft"] = left
-				self.data["rRight"] = right
-			elif(i == 1):
 				self.data["bTop"] = top
 				self.data["bBottom"] = bottom
 				self.data["bLeft"] = left
 				self.data["bRight"] = right
+			elif(i == 1):
+				self.data["rTop"] = top
+				self.data["rBottom"] = bottom
+				self.data["rLeft"] = left
+				self.data["rRight"] = right
 			elif(i == 2):
 				self.data["yTop"] = top
 				self.data["yBottom"] = bottom
 				self.data["yLeft"] = left
 				self.data["yRight"] = right
 				
+		self.data["index"] = self.index
+		index += 1
 		self.data["time"] = time.time()
-		print self.data
-		#save image with three rects
+		#print self.data
 	
 	def End(self):
 		print("TargetID is ending")
 		
-if __name__ == "__main__": TargetID()
+#if __name__ == "__main__": TargetID()
