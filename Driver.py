@@ -138,6 +138,7 @@ class Driver(object):
 		if(not self.processing):
 			videoThread = threading.Thread(name="video-thread", target=self.VideoThread)
 			videoThread.start()
+		print("Thread: " + str(time.time() - testStart))
 		self.imu.Update()
 		if((math.fabs(self.imu.data["accX"]) > 2.0) & (self.flightState == 0)):
 			flightState = 1
@@ -162,7 +163,6 @@ class Driver(object):
 		self.tx.Update()
 		self.index += 1
 		#time.sleep(0.01)
-		print("Update: " + str(time.time() - testStart))
 
 	def End(self):
 		self.vid.End()
