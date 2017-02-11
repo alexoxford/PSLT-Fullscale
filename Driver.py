@@ -134,6 +134,7 @@ class Driver(object):
 				quit = True
 
 	def Update(self):
+		testStart = time.time()
 		if(not self.processing):
 			videoThread = threading.Thread(name="video-thread", target=self.VideoThread)
 			videoThread.start()
@@ -161,6 +162,7 @@ class Driver(object):
 		self.tx.Update()
 		self.index += 1
 		#time.sleep(0.01)
+		print("Update: " + str(time.time() - testStart))
 
 	def End(self):
 		self.vid.End()
