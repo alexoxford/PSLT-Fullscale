@@ -24,38 +24,46 @@ class ReadGPS(object):
 		self.lastSpeed = 0.0
 		self.lastTrack = 0.0
 		self.data = {}
+		self.data["lat"] = lastLat
+		self.data["lon"] = lastLon
+		self.data["climb"] = lastClimb
+		self.data["alt"] = lastAlt
+		self.data["speed"] = lastSpeed
+		self.data["track"] = lastTrack
+		self.data["errs"] = 0
+		self.data["time"] = time.time()
 
 	def Update(self):
 		errs = 0
 		report = self.session.next()
 		if report["class"] == "TPV":
 			if hasattr(report, "lat"):
-				lastLat = report.lat
+				self.lastLat = report.lat
 			else:
 				errs += 1
 
 			if hasattr(report, "lon"):
-				lastLon = report.lon
+				self.lastLon = report.lon
 			else:
 				errs += 1
 
 			if hasattr(report, "climb"):
-				lastClimb = report.climb
+				self.lastClimb = report.climb
 			else:
 				errs += 1
 
 			if hasattr(report, "alt"):
-				lastAlt = report.alt
+				self.lastAlt = report.alt
 			else:
 				errs += 1
 
 			if hasattr(report, "speed"):
-				lastSpeed = report.speed
+				self.lastSpeed = report.speed
 			else:
 				errs += 1
 
 			if hasattr(report, "track"):
-				lastTrack = report.track
+				self.lastTrack = report.track
 			else:
 				errs += 1
 
