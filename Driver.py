@@ -171,7 +171,7 @@ class Driver(object):
 			print("BURNOUT")
 			self.mc.startRotation(self.imu.data["rot"])
 			self.flightState = 2
-		if(((self.flightState == 2) & (self.mc.rotate == 3)) | ((time.time() - self.launchTime) > 15)):
+		if(((self.flightState == 2) & ((self.mc.rotate == 3) | ((time.time() - self.launchTime) > 15)))):
 			self.flightState = 3
 			self.mc.rotate = 3
 			print("END ROTATION")

@@ -45,6 +45,7 @@ class MotorController(object):
 			self.p.stop()
 
 	def __init__(self):
+		print("MotorController is starting")
 		self.startRot = -1  #the rotation when the reaction wheel started
 		self.rot = -1  #the current rotation; this will be updated from outside this class
 		self.distRot = -1  #how far the rocket has rotated since the motor started
