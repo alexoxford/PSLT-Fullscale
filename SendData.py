@@ -26,7 +26,7 @@ class SendData(object):
 
 		if(not data == None):
 			data = ','.join(data)
-			#print data
+			print data
 			self.ser.write(data)
 
 	def End(self):

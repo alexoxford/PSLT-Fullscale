@@ -157,7 +157,7 @@ class Driver(object):
 				quit = True
 
 	def Update(self):
-		testStart = time.time()
+		#testStart = time.time()
 		
 		if(not self.vidProc):
 			videoThread = threading.Thread(name="video-thread", target=self.VideoThread)
@@ -210,7 +210,7 @@ class Driver(object):
 		rotRate = delta / (deltaTime)
 		
 		self.mc.Update(rot, delta, rotRate)
-		print(self.mc.speed, self.mc.distRot, rotRate)
+		#print(self.mc.speed, self.mc.distRot, rotRate)
 		self.lastIMUTime = imuTime
 		self.lastMagY = magY
 		self.lastMagZ = magZ
@@ -222,7 +222,7 @@ class Driver(object):
 		self.index += 1
 		
 		#time.sleep(0.01)
-		print("Update: " + str(time.time() - testStart))
+		#print("Update: " + str(time.time() - testStart))
 
 	def End(self):
 		self.vid.End()
