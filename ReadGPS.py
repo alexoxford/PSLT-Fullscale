@@ -8,6 +8,14 @@ class ReadGPS(object):
 
 		self.session = gps.gps("localhost", "2947")
 		self.session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
+		report = self.session.next()
+		print(report)
+		report = self.session.next()
+		print(report)
+		report = self.session.next()
+		print(report)
+		report = self.session.next()
+		print(report)
 
 		self.lastLat = 0.0
 		self.lastLon = 0.0
@@ -20,7 +28,6 @@ class ReadGPS(object):
 	def Update(self):
 		errs = 0
 		report = self.session.next()
-		print(report)
 		if report["class"] == "TPV":
 			if hasattr(report, "lat"):
 				lastLat = report.lat
