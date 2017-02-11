@@ -2,7 +2,7 @@ import time
 import subprocess
 import os
 import math
-import RecordVideo
+from RecordVideo import RecordVideo
 import ReadIMU
 import ReadGPS
 import SendData
