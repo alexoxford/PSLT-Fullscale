@@ -2,6 +2,7 @@ import time
 import subprocess
 import os
 import math
+import threading
 from RecordVideo import RecordVideo
 from ReadIMU import ReadIMU
 from ReadGPS import ReadGPS
@@ -78,6 +79,21 @@ class Driver(object):
 			dataFile.write(data)
 			dataFile.flush()
 			os.fsync(dataFile.fileno())
+			
+	def VideoThread(self):
+		self.processing = True
+		testStart = time.time()
+		self.vid.Update(picture=True)
+		print("Pic: " + str(time.time() - testStart))
+		
+		testStart = time.time()
+		self.tid.Update()
+		print("Target ID: " + str(time.time() - testStart))
+		
+		testStart = time.time()
+		self.vid.Update(flush=True)
+		print("Flush: " + str(time.time() - testStart))
+		self.processing = False
 
 	def __init__(self):
 		self.vid = RecordVideo()
@@ -95,6 +111,7 @@ class Driver(object):
 		self.elapsed = 0
 		self.start = time.time()
 		self.stop = time.time()
+		self.processing = False
 		self.flightState = 0
 		with open("/home/pi/Desktop/PSLT-Fullscale/Data/FlightData.csv", "wb") as dataFile:
 			dataFile.write("Index," + self.gpsHeader + ',' + self.imuHeader + ',' + self.vidHeader + ',' + "Motor Speed," + "Driver Time" + '\n')
@@ -117,21 +134,9 @@ class Driver(object):
 				quit = True
 
 	def Update(self):
-		self.stop = time.time()
-		self.elapsed = self.stop - self.start
-		if(self.elapsed > 1):
-			self.start = time.time()
-			self.elapsed = 0
-			testStart = time.time()
-			self.vid.Update(picture=True, flush=True)
-			print("Vid + Pic: " + str(time.time() - testStart))
-			testStart = time.time()
-			self.tid.Update()
-			print("Target ID: " + str(time.time() - testStart))
-		else:
-			testStart = time.time()
-			self.vid.Update()
-			print("Video: " + str(time.time() - testStart))
+		if(not self.processing):
+			videoThread = threading.Thread(name="video-thread", target=VideoThread)
+			videoThread.start()
 		self.imu.Update()
 		if((math.fabs(self.imu.data["accX"]) > 2.0) & (self.flightState == 0)):
 			flightState = 1
