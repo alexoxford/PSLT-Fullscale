@@ -20,7 +20,7 @@ class ReadGPS(object):
 	def Update(self):
 		errs = 0
 		report = self.session.next()
-		print(report["class"])
+		print(report)
 		if report["class"] == "TPV":
 			if hasattr(report, "lat"):
 				lastLat = report.lat
