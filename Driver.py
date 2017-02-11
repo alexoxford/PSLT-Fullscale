@@ -82,6 +82,7 @@ class Driver(object):
 	def __init__(self):
 		self.vid = RecordVideo()
 		self.imu = ReadIMU()
+		self.StartGPS()
 		self.gps = ReadGPS()
 		self.tx = SendData()
 		self.mc = MotorController()
@@ -95,7 +96,6 @@ class Driver(object):
 		self.start = time.time()
 		self.stop = time.time()
 		self.flightState = 0
-		StartGPS()
 		with open("/home/pi/Desktop/PSLT-Fullscale/Data/FlightData.csv", "wb") as dataFile:
 			dataFile.write("Index," + gpsHeader + ',' + imuHeader + ',' + vidHeader + ',' + "Motor Speed," + "Driver Time" + '\n')
 			dataFile.flush()
