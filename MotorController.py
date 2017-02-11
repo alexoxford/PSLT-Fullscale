@@ -31,7 +31,7 @@ class MotorController(object):
 
 	def setMotorSpeed(self, speed):
 		#sets the motor to the given speed
-		if(speed > 1.0)
+		if(speed > 1.0):
 			speed = 1.0
 		self.speed = speed
 		if(speed < 0.0):
