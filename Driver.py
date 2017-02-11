@@ -184,10 +184,11 @@ class Driver(object):
 		delta = self.angle_between((magY, magZ), (self.lastMagY, self.lastMagZ))
 		if(math.fabs(delta) < rotThreshold):
 			delta = 0
-		rotRate = delta / (imuTime - self.lastIMUTime)
+		deltaTime = imuTime - self.lastIMUTime
+		rotRate = delta / (deltaTime)
 		
 		print(rot, delta, rotRate)
-		#self.mc.Update(rot, rotRate)
+		#self.mc.Update(rot, delta, rotRate)
 		self.lastIMUTime = imuTime
 		self.lastMagY = magY
 		self.lastMagZ = magZ

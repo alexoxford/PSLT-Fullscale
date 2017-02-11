@@ -1,13 +1,25 @@
+import math
+import RPi.GPIO as GPIO
+
 class MotorController(object):
 	
 	def stopRotation(self):
 		#this function will be called ~20 times per second
 		#the goal of this function is to reduce the rotaion rate to as close to 0 as possible
 
-		#calculate speed
+		done = False
+
+		if(math.fabs(rotRate) > 100):
+			speed = 1.0 if rotRate >= 0.0 else -1.0
+		elif(math.fabs(rotRate) > 2):
+			speed = rotRate / 100.0
+		else:
+			speed = 0.0
+			done = True
 		self.setMotorSpeed(speed)
 
 		#if the rotation rate is 0 (or very close to it) return True, else return False
+		return done
 
 	def startRotation(self, rotation):
 		#starts the rotation and initializes the variables
@@ -16,36 +28,39 @@ class MotorController(object):
 		self.setMotorSpeed(1)
 		self.startRot = rotation
 		self.distRot = 0
-		self.rotations = 0
-		self.lastTheta = 0
-
-	def updateDistance(self):
-		#this function updates distRot
-		theta = (self.rot - self.startRot) if(self.rot >= self.startRot) else (self.rot + (360.0 - self.startRot))
-		if(theta < self.lastTheta):  #a full rotation has occured
-			self.rotations += 1
-		self.distRot = (theta + (360.0*rotations))
-		self.lastTheta = theta
 
 	def setMotorSpeed(self, speed):
 		#sets the motor to the given speed
-		#I'll fill this in later
+		if(speed > 1.0)
+			speed = 1.0
 		self.speed = speed
+		if(speed < 0.0):
+			GPIO.output(21,0)
+			self.p.start(speed*100.0)
+		elif(speed > 0.0):
+			GPIO.output(21,1)
+			self.p.start(speed*100.0)
+		elif(speed == 0.0):
+			GPIO.output(21,0)
+			self.p.stop()
 
 	def __init__(self):
 		self.startRot = -1  #the rotation when the reaction wheel started
 		self.rot = -1  #the current rotation; this will be updated from outside this class
 		self.distRot = -1  #how far the rocket has rotated since the motor started
 		self.rotRate = -1  #the current rotation rate; this will be updated from outside this class
-		self.rotations = -1  #the number of full rotations the rocket has completed since the motor started
-		self.lastTheta = -1  #the last value of theta (see updateDistance())
 		self.rotate = 0
 		self.speed = 0
+		
+		GPIO.setmode(GPIO.BOARD)
+		GPIO.setup([21,23], GPIO.OUT)
+		self.p = GPIO.PWM(23, 5120)
 
-	def Update(self, rot, rotRate):
+	def Update(self, rot, delta, rotRate):
 		self.rot = rot
 		self.rotRate = rotRate
-		self.updateRotation()
+		self.distRot += delta
+		
 		if(self.rotate == 1):
 			if(self.distRot >= 720.0):
 				self.rotate = 2
