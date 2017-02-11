@@ -105,9 +105,13 @@ class Driver(object):
 		return vector / np.linalg.norm(vector)
 
 	def angle_between(self, v1, v2):
-		v1_u = self.unit_vector(v1)
-		v2_u = self.unit_vector(v2)
-		return math.degrees(np.arccos(np.clip(np.dot(v1_u, v2_u), -1.0, 1.0)))
+		v1_a = math.atan2(v1[0], v1[1])
+		v2_a = math.atan2(v2[0], v2[1])
+		diff = math.degrees(v1_a - v2_a)
+		if(diff > 180):
+			diff -= 360
+		elif(diff < -180):
+			diff += 360
 
 	def __init__(self):
 		self.vid = RecordVideo()
@@ -178,7 +182,7 @@ class Driver(object):
 		delta = self.angle_between((magY, magZ), (self.lastMagY, self.lastMagZ))
 		rotRate = delta / (imuTime - self.lastIMUTime)
 		
-		print(rot, rotRate)
+		print(rot, delta, rotRate)
 		#self.mc.Update(rot, rotRate)
 		self.lastIMUTime = imuTime
 		self.lastMagY = magY
