@@ -73,4 +73,5 @@ class MotorController(object):
 			self.setMotorSpeed(0.0)
 
 	def End(self):
+		GPIO.cleanup()
 		print("MotorController is ending")
