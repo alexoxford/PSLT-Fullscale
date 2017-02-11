@@ -127,12 +127,12 @@ class Driver(object):
 		else:
 			self.vid.Update()
 		self.imu.Update()
-		if(math.fabs(self.imu.data["accX"]) > 2.0 & self.flightState == 0):
+		if((math.fabs(self.imu.data["accX"]) > 2.0) & (self.flightState == 0)):
 			flightState = 1
-		if(math.fabs(self.imu.data["accX"]) < 2.0 & self.flightState == 1):
+		if((math.fabs(self.imu.data["accX"]) < 2.0) & (self.flightState == 1)):
 			#self.mc.startRotation(self.imu.data["rot"])
 			self.flightState = 2
-		if(self.flightState == 2 & self.mc.rotate == 3):
+		if((self.flightState == 2) & (self.mc.rotate == 3)):
 			self.flightState = 3
 		self.gps.Update()
 		rotRate = 0
