@@ -82,17 +82,17 @@ class Driver(object):
 			
 	def VideoThread(self):
 		self.processing = True
-		testStart = time.time()
+		#testStart = time.time()
 		self.vid.Update(picture=True)
-		print("Pic: " + str(time.time() - testStart))
+		#print("Pic: " + str(time.time() - testStart))
 		
-		testStart = time.time()
+		#testStart = time.time()
 		self.tid.Update()
-		print("Target ID: " + str(time.time() - testStart))
+		#print("Target ID: " + str(time.time() - testStart))
 		
-		testStart = time.time()
+		#testStart = time.time()
 		self.vid.Update(flush=True)
-		print("Flush: " + str(time.time() - testStart))
+		#print("Flush: " + str(time.time() - testStart))
 		self.processing = False
 
 	def __init__(self):
@@ -134,12 +134,12 @@ class Driver(object):
 				quit = True
 
 	def Update(self):
-		testStart = time.time()
 		if(not self.processing):
 			videoThread = threading.Thread(name="video-thread", target=self.VideoThread)
 			videoThread.start()
-		print("Thread: " + str(time.time() - testStart))
+		testStart = time.time()
 		self.imu.Update()
+		print("IMU: " + str(time.time() - testStart))
 		if((math.fabs(self.imu.data["accX"]) > 2.0) & (self.flightState == 0)):
 			flightState = 1
 		if((math.fabs(self.imu.data["accX"]) < 2.0) & (self.flightState == 1)):
