@@ -167,18 +167,28 @@ class Driver(object):
 			self.flightState = 1
 			self.launchTime = time.time()
 			print("LAUNCH")
+			with open("/home/pi/Desktop/PSLT-Fullscale/Data/log.txt", "ab") as log:
+				log.write("LAUNCH at t+0.00s")
 		if((math.fabs(self.imu.data["accX"]) < 2.0) & (self.flightState == 1)):
 			print("BURNOUT")
+			with open("/home/pi/Desktop/PSLT-Fullscale/Data/log.txt", "ab") as log:
+				log.write("BURNOUT at t+{0}s".format(time.time() - self.launchTime))
 			self.mc.startRotation(self.imu.data["rot"])
 			print("ROLL")
+			with open("/home/pi/Desktop/PSLT-Fullscale/Data/log.txt", "ab") as log:
+				log.write("ROLL at t+{0}s".format(time.time() - self.launchTime))
 			self.flightState = 2
 		if(((self.flightState == 2) & ((time.time() - self.launchTime) > 10))):
 			self.mc.rotate = 2
 			print("COUNTER ROLL")
-		if(((self.flightState == 2) & ((self.mc.rotate == 3) | ((time.time() - self.launchTime) > 15)))):
+			with open("/home/pi/Desktop/PSLT-Fullscale/Data/log.txt", "ab") as log:
+				log.write("COUNTER ROLL at t+{0}s".format(time.time() - self.launchTime))
+		if(((self.flightState == 2) & ((self.mc.rotate == 3) | ((time.time() - self.launchTime) > 13)))):
 			self.flightState = 3
 			self.mc.rotate = 3
 			print("END ROTATION")
+			with open("/home/pi/Desktop/PSLT-Fullscale/Data/log.txt", "ab") as log:
+				log.write("END ROTATION at t+{0}s".format(time.time() - self.launchTime))
 		
 		if(not self.gpsProc):
 			gpsThread = threading.Thread(name="gps-thread", target=self.GPSThread)
