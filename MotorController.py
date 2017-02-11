@@ -66,8 +66,10 @@ class MotorController(object):
 				self.rotate = 2
 		elif(self.rotate == 2):
 			if(self.stopRotation()):
-				self.setMotorSpeed(0)
+				self.setMotorSpeed(0.0)
 				self.rotate = 3
+		elif(self.rotate == 3):
+			self.setMotorSpeed(0.0)
 
 	def End(self):
 		print("MotorController is ending")

@@ -130,6 +130,7 @@ class Driver(object):
 		self.vidProc = False
 		self.gpsProc = False
 		self.flightState = 0
+		self.launchTime = -1
 		with open("/home/pi/Desktop/PSLT-Fullscale/Data/FlightData.csv", "wb") as dataFile:
 			dataFile.write("Index," + self.gpsHeader + ',' + self.imuHeader + ',' + self.vidHeader + ',' + "Motor Speed," + "Driver Time" + '\n')
 			dataFile.flush()
@@ -164,11 +165,16 @@ class Driver(object):
 		
 		if((math.fabs(self.imu.data["accX"]) > 2.0) & (self.flightState == 0)):
 			flightState = 1
+			self.launchTime = time.time()
+			print("LAUNCH")
 		if((math.fabs(self.imu.data["accX"]) < 2.0) & (self.flightState == 1)):
+			print("BURNOUT")
 			self.mc.startRotation(self.imu.data["rot"])
 			self.flightState = 2
-		if((self.flightState == 2) & (self.mc.rotate == 3)):
+		if(((self.flightState == 2) & (self.mc.rotate == 3)) | ((time.time() - self.launchTime) > 15)):
 			self.flightState = 3
+			self.mc.rotate = 3
+			print("END ROTATION")
 		
 		if(not self.gpsProc):
 			gpsThread = threading.Thread(name="gps-thread", target=self.GPSThread)
@@ -187,8 +193,8 @@ class Driver(object):
 		deltaTime = imuTime - self.lastIMUTime
 		rotRate = delta / (deltaTime)
 		
-		print(rot, delta, rotRate)
 		self.mc.Update(rot, delta, rotRate)
+		print(self.mc.speed, rotRate)
 		self.lastIMUTime = imuTime
 		self.lastMagY = magY
 		self.lastMagZ = magZ
