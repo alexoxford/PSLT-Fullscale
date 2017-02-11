@@ -29,7 +29,7 @@ class Driver(object):
 		time.sleep(1)
 
 	def WriteData(self, dictGPS, dictIMU, dictVid):
-		data = self.index + ','
+		data = str(self.index) + ','
 		
 		data += str(dictGPS["lat"]) + ','
 		data += str(dictGPS["lon"]) + ','
