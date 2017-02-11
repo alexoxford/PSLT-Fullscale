@@ -17,7 +17,7 @@ class TargetID(object):
 		hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 		#hsv = frame
 		boundaries = [
-		([129, 50, 0], [149, 255, 255])
+		([125, 0, 0], [155, 255, 255])
 		]
 		for i, (lower, upper) in enumerate(boundaries):
 			lower = np.array(lower, dtype = "uint8")
