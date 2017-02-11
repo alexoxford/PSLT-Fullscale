@@ -28,7 +28,14 @@ class SendData(object):
 			data = ','.join(data)
 			data += '\n'
 			#print data
-			self.ser.write(data)
+			try:
+				self.ser.write(data)
+			except :
+				try:
+					self.ser = serial.Serial("/dev/ttyUSB0", 9600)
+				except:
+					pass
+				
 
 	def End(self):
 		print "SendData is ending"
