@@ -127,13 +127,13 @@ class Driver(object):
 		else:
 			self.vid.Update()
 		self.imu.Update()
-		if(math.fabs(self.imu.data["accX"]) > 2.0 & flightState == 0):
+		if(math.fabs(self.imu.data["accX"]) > 2.0 & self.flightState == 0):
 			flightState = 1
-		if(math.fabs(self.imu.data["accX"]) < 2.0 & flightState == 1):
+		if(math.fabs(self.imu.data["accX"]) < 2.0 & self.flightState == 1):
 			#self.mc.startRotation(self.imu.data["rot"])
-			flightState = 2
-		if(flightState == 2 & self.mc.rotate == 3):
-			flightState = 3
+			self.flightState = 2
+		if(self.flightState == 2 & self.mc.rotate == 3):
+			self.flightState = 3
 		self.gps.Update()
 		rotRate = 0
 		rot = self.imu.data["rot"]
@@ -143,6 +143,7 @@ class Driver(object):
 		else:
 			rotRate = (((360.0 - lastRot) + rot) / (imuTime - lastIMUTime))
 		#self.mc.Update(rot, rotRate)
+		print(rotRate)
 		WriteData(self.gps.data, self.imu.data, self.tid.data)
 		self.tx.Update()
 		self.index += 1
