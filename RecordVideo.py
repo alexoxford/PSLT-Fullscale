@@ -24,5 +24,5 @@ class RecordVideo(object):
 		os.fsync(self.videoFile.fileno())
 		
 	def End(self):
-		camera.stop_recording()
+		self.camera.stop_recording()
 		print("RecordVideo is ending")
