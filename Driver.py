@@ -145,9 +145,8 @@ class Driver(object):
 			self.flightState = 2
 		if((self.flightState == 2) & (self.mc.rotate == 3)):
 			self.flightState = 3
-		testStart = time.time()
 		self.gps.Update()
-		print("GPS: " + str(time.time() - testStart))
+		testStart = time.time()
 		rotRate = 0
 		rot = self.imu.data["rot"]
 		imuTime = self.imu.data["time"]
@@ -163,6 +162,7 @@ class Driver(object):
 		self.tx.Update()
 		self.index += 1
 		#time.sleep(0.01)
+		print("Everything else: " + str(time.time() - testStart))
 
 	def End(self):
 		self.vid.End()
