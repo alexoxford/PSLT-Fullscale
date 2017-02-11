@@ -25,7 +25,7 @@ class SendData(object):
 		data = self.get_last_row("/home/pi/Desktop/PSLT-Fullscale/Data/FlightData.csv")
 
 		if(not data == None):
-			data = data.join(',')
+			data = ','.join(data)
 			print data
 			self.ser.write(data)
 
