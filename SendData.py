@@ -14,7 +14,7 @@ def get_last_row(csv_filename):
 				lastrow = None
 	except IOError:
 		lastrow = None
-			
+
 	return lastrow
 
 def __init__(self):
