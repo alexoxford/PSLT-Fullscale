@@ -135,6 +135,8 @@ class Driver(object):
 			dataFile.write("Index," + self.gpsHeader + ',' + self.imuHeader + ',' + self.vidHeader + ',' + "Motor Speed," + "Driver Time" + '\n')
 			dataFile.flush()
 			os.fsync(dataFile.fileno())
+		with open("/home/pi/Desktop/PSLT-Fullscale/Data/log.txt", "ab") as log:
+			log.write("START at {0}".format(time.time()))
 		self.vid.Update(picture=True)
 		self.gps.Update()
 		self.imu.Update()
