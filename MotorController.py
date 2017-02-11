@@ -25,7 +25,7 @@ class MotorController(object):
 		#starts the rotation and initializes the variables
 		#rotation is the current rotation in degrees
 		self.rotate = 1
-		self.setMotorSpeed(1)
+		self.setMotorSpeed(1.0)
 		self.startRot = rotation
 		self.distRot = 0
 

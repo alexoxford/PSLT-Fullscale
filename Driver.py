@@ -164,7 +164,7 @@ class Driver(object):
 		self.imu.Update()
 		
 		if((math.fabs(self.imu.data["accX"]) > 2.0) & (self.flightState == 0)):
-			flightState = 1
+			self.flightState = 1
 			self.launchTime = time.time()
 			print("LAUNCH")
 		if((math.fabs(self.imu.data["accX"]) < 2.0) & (self.flightState == 1)):
