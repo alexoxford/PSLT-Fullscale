@@ -26,7 +26,7 @@ class SendData(object):
 
 		if(not data == None):
 			#print data
-			ser.write(data)
+			self.ser.write(data)
 
 	def End(self):
 		print "SendData is ending"
