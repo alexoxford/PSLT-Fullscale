@@ -124,17 +124,17 @@ class Driver(object):
 			self.elapsed = 0
 			testStart = time.time()
 			self.vid.Update(picture=True)
-			print(str(time.time() - testStart))
+			print("Vid + Pic: " + str(time.time() - testStart))
 			testStart = time.time()
 			self.tid.Update()
-			print(str(time.time() - testStart))
+			print("Target ID: " + str(time.time() - testStart))
 		else:
 			testStart = time.time()
 			self.vid.Update()
-			print(str(time.time() - testStart))
+			print("Video: " + str(time.time() - testStart))
 		testStart = time.time()
 		self.imu.Update()
-		print(str(time.time() - testStart))
+		print("IMU: " + str(time.time() - testStart))
 		if((math.fabs(self.imu.data["accX"]) > 2.0) & (self.flightState == 0)):
 			flightState = 1
 		if((math.fabs(self.imu.data["accX"]) < 2.0) & (self.flightState == 1)):
@@ -144,7 +144,7 @@ class Driver(object):
 			self.flightState = 3
 		testStart = time.time()
 		self.gps.Update()
-		print(str(time.time() - testStart))
+		print("GPS: " + str(time.time() - testStart))
 		rotRate = 0
 		rot = self.imu.data["rot"]
 		imuTime = self.imu.data["time"]
@@ -156,12 +156,12 @@ class Driver(object):
 		self.lastRotRate = rotRate
 		testStart = time.time()
 		self.WriteData(self.gps.data, self.imu.data, self.tid.data)
-		print(str(time.time() - testStart))
+		print("Write: " + str(time.time() - testStart))
 		if(not self.tid.data["bTop"] == -1):
 			print(self.tid.data["index"])
 		testStart = time.time()
 		self.tx.Update()
-		print(str(time.time() - testStart))
+		print("Transmit: " + str(time.time() - testStart))
 		self.index += 1
 		#time.sleep(0.01)
 
