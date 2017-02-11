@@ -22,7 +22,7 @@ class ReadIMU(object):
 
 		for i, acc in enumerate(accList):
 			if(not acc == None):
-				self.lastAccList[i] = acc
+				self.lastAccList[i] = acc / 4098.0
 			else:
 				errs += 1
 

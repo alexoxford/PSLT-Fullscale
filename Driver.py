@@ -165,7 +165,7 @@ class Driver(object):
 		if((math.fabs(self.imu.data["accX"]) > 2.0) & (self.flightState == 0)):
 			flightState = 1
 		if((math.fabs(self.imu.data["accX"]) < 2.0) & (self.flightState == 1)):
-			#self.mc.startRotation(self.imu.data["rot"])
+			self.mc.startRotation(self.imu.data["rot"])
 			self.flightState = 2
 		if((self.flightState == 2) & (self.mc.rotate == 3)):
 			self.flightState = 3
@@ -188,7 +188,7 @@ class Driver(object):
 		rotRate = delta / (deltaTime)
 		
 		print(rot, delta, rotRate)
-		#self.mc.Update(rot, delta, rotRate)
+		self.mc.Update(rot, delta, rotRate)
 		self.lastIMUTime = imuTime
 		self.lastMagY = magY
 		self.lastMagZ = magZ
@@ -200,7 +200,7 @@ class Driver(object):
 		self.index += 1
 		
 		#time.sleep(0.01)
-		#print("Update: " + str(time.time() - testStart))
+		print("Update: " + str(time.time() - testStart))
 
 	def End(self):
 		self.vid.End()
