@@ -12,11 +12,10 @@ class TargetID(object):
 		
 	def Update(self):
 		frame = cv2.imread("C:\\Users\\Alex\\Desktop\\test.jpg")
-		hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+		#hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+		hsv = frame
 		boundaries = [
-		([150, 50, 50], [170, 255, 255]),
-		([40, 50, 50], [60, 255, 255]),
-		([80, 50, 50], [100, 255, 255])
+		([225, 152, 122], [245, 172, 142])
 		]
 		for i, (lower, upper) in enumerate(boundaries):
 			lower = np.array(lower, dtype = "uint8")
