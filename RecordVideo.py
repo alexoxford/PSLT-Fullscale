@@ -17,15 +17,16 @@ class RecordVideo(object):
 		print("1...")
 		time.sleep(1)
 
-	def Update(self, picture=False):
+	def Update(self, picture=False, flush=False):
 		if(picture):
 			testStart = time.time()
 			self.camera.capture("/home/pi/Desktop/PSLT-Fullscale/Data/img.jpg", use_video_port=True)
 			print("Pic: " + str(time.time() - testStart))
-		testStart = time.time()
-		self.videoFile.flush()
-		os.fsync(self.videoFile.fileno())
-		print("Vid Flush: " + str(time.time() - testStart))
+		if(flush):
+			testStart = time.time()
+			self.videoFile.flush()
+			os.fsync(self.videoFile.fileno())
+			print("Vid Flush: " + str(time.time() - testStart))
 		
 	def End(self):
 		self.camera.stop_recording()

@@ -123,7 +123,7 @@ class Driver(object):
 			self.start = time.time()
 			self.elapsed = 0
 			testStart = time.time()
-			self.vid.Update(picture=True)
+			self.vid.Update(picture=True, flush=True)
 			print("Vid + Pic: " + str(time.time() - testStart))
 			testStart = time.time()
 			self.tid.Update()
