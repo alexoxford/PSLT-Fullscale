@@ -108,7 +108,6 @@ class Driver(object):
 		v1_a = math.atan2(v1[0], v1[1])
 		v2_a = math.atan2(v2[0], v2[1])
 		diff = math.degrees(v1_a - v2_a)
-		print diff
 		if(diff > 180):
 			diff -= 360
 		elif(diff < -180):
@@ -176,7 +175,7 @@ class Driver(object):
 			gpsThread.start()
 		
 		rotRate = 0
-		rotThreshold = 0
+		rotThreshold = 1
 		rot = self.imu.data["rot"]
 		magY = self.imu.data["magY"]
 		magZ = self.imu.data["magZ"]
@@ -200,7 +199,7 @@ class Driver(object):
 		self.index += 1
 		
 		#time.sleep(0.01)
-		print("Update: " + str(time.time() - testStart))
+		#print("Update: " + str(time.time() - testStart))
 
 	def End(self):
 		self.vid.End()
