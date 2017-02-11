@@ -24,12 +24,12 @@ class ReadGPS(object):
 		self.lastSpeed = 0.0
 		self.lastTrack = 0.0
 		self.data = {}
-		self.data["lat"] = lastLat
-		self.data["lon"] = lastLon
-		self.data["climb"] = lastClimb
-		self.data["alt"] = lastAlt
-		self.data["speed"] = lastSpeed
-		self.data["track"] = lastTrack
+		self.data["lat"] = self.lastLat
+		self.data["lon"] = self.lastLon
+		self.data["climb"] = self.lastClimb
+		self.data["alt"] = self.lastAlt
+		self.data["speed"] = self.lastSpeed
+		self.data["track"] = self.lastTrack
 		self.data["errs"] = 0
 		self.data["time"] = time.time()
 
@@ -67,12 +67,12 @@ class ReadGPS(object):
 			else:
 				errs += 1
 
-			self.data["lat"] = lastLat
-			self.data["lon"] = lastLon
-			self.data["climb"] = lastClimb
-			self.data["alt"] = lastAlt
-			self.data["speed"] = lastSpeed
-			self.data["track"] = lastTrack
+			self.data["lat"] = self.lastLat
+			self.data["lon"] = self.lastLon
+			self.data["climb"] = self.lastClimb
+			self.data["alt"] = self.lastAlt
+			self.data["speed"] = self.lastSpeed
+			self.data["track"] = self.lastTrack
 			self.data["errs"] = errs
 			self.data["time"] = time.time()
 		print("From GPS: ", self.data)
