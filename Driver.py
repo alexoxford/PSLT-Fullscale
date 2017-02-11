@@ -138,12 +138,13 @@ class Driver(object):
 		rotRate = 0
 		rot = self.imu.data["rot"]
 		imuTime = self.imu.data["time"]
-		if(rot >= lastRot):
-			rotRate = ((rot - lastRot) / (imuTime - lastIMUTime))
+		if(rot >= self.lastRot):
+			rotRate = ((rot - self.lastRot) / (imuTime - self.lastIMUTime))
 		else:
-			rotRate = (((360.0 - lastRot) + rot) / (imuTime - lastIMUTime))
+			rotRate = (((360.0 - self.lastRot) + rot) / (imuTime - self.lastIMUTime))
 		#self.mc.Update(rot, rotRate)
-		print(rotRate)
+		self.lastRotRate = rotRate
+		print(self.lastRotRate)
 		WriteData(self.gps.data, self.imu.data, self.tid.data)
 		self.tx.Update()
 		self.index += 1
