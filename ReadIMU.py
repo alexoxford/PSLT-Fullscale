@@ -22,7 +22,7 @@ class ReadIMU(object):
 
 		for i, acc in enumerate(accList):
 			if(not acc == None):
-				lastAccList[i] = acc
+				self.lastAccList[i] = acc
 			else:
 				errs += 1
 
@@ -33,7 +33,7 @@ class ReadIMU(object):
 
 		for i, gyro in enumerate(gyroList):
 			if(not gyro == None):
-				lastGyroList[i] = gyro
+				self.lastGyroList[i] = gyro
 			else:
 				errs += 1
 
@@ -41,15 +41,15 @@ class ReadIMU(object):
 
 		for i, mag in enumerate(magList):
 			if(not mag == None):
-				lastMagList[i] = mag
+				self.lastMagList[i] = mag
 			else:
 				errs += 1
 
-		rot = math.degrees(math.atan2(lastMagList[1], lastMagList[2]) + math.pi)
+		rot = math.degrees(math.atan2(self.lastMagList[1], self.lastMagList[2]) + math.pi)
 
 		alt = self.imu.getAltitude()
 		if(not alt == None):
-			lastAlt = alt
+			self.lastAlt = alt
 		else:
 			errs += 1
 
