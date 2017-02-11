@@ -9,13 +9,9 @@ class ReadGPS(object):
 		self.session = gps.gps("localhost", "2947")
 		self.session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
 		report = self.session.next()
-		print(report)
 		report = self.session.next()
-		print(report)
 		report = self.session.next()
-		print(report)
 		report = self.session.next()
-		print(report)
 
 		self.lastLat = 0.0
 		self.lastLon = 0.0
@@ -75,7 +71,6 @@ class ReadGPS(object):
 			self.data["track"] = self.lastTrack
 			self.data["errs"] = errs
 			self.data["time"] = time.time()
-		print("From GPS: ", self.data)
 
 	def End(self):
 		print("ReadGPS is ending")

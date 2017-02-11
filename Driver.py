@@ -136,7 +136,6 @@ class Driver(object):
 		if((self.flightState == 2) & (self.mc.rotate == 3)):
 			self.flightState = 3
 		self.gps.Update()
-		print("From Driver: ", self.gps.data)
 		rotRate = 0
 		rot = self.imu.data["rot"]
 		imuTime = self.imu.data["time"]
