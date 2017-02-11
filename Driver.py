@@ -3,6 +3,7 @@ import subprocess
 import os
 import math
 import threading
+import numpy as np
 from RecordVideo import RecordVideo
 from ReadIMU import ReadIMU
 from ReadGPS import ReadGPS
@@ -99,6 +100,14 @@ class Driver(object):
 		self.gpsProc = True
 		self.gps.Update()
 		self.gpsProc = False
+		
+	def unit_vector(self, vector):
+		return vector / np.linalg.norm(vector)
+
+	def angle_between(self, v1, v2):
+		v1_u = unit_vector(v1)
+		v2_u = unit_vector(v2)
+		return math.degrees(np.arccos(np.clip(np.dot(v1_u, v2_u), -1.0, 1.0)))
 
 	def __init__(self):
 		self.vid = RecordVideo()
@@ -113,9 +122,6 @@ class Driver(object):
 		#self.vidHeader = "R Top,R Bottom,R Left,R Right,B Top,B Bottom,B Left,B Right,Y Top,Y Bottom,Y Left,Y Right,Vid Index,Vid Time"
 		self.vidHeader = "B Top,B Bottom,B Left,B Right,Vid Index,Vid Time"
 		self.index = 0
-		self.elapsed = 0
-		self.start = time.time()
-		self.stop = time.time()
 		self.vidProc = False
 		self.gpsProc = False
 		self.flightState = 0
@@ -126,8 +132,11 @@ class Driver(object):
 		self.vid.Update(picture=True)
 		self.gps.Update()
 		self.imu.Update()
-		self.lastRot = self.imu.data["rot"]
+		
+		self.lastMagY = self.imu.data["magY"]
+		self.lastMagZ = self.imu.data["magZ"]
 		self.lastIMUTime = self.imu.data["time"]
+		
 		self.tid.Update()
 		print("Initialization finished")
 		quit = False
@@ -141,10 +150,13 @@ class Driver(object):
 
 	def Update(self):
 		testStart = time.time()
+		
 		if(not self.vidProc):
 			videoThread = threading.Thread(name="video-thread", target=self.VideoThread)
 			videoThread.start()
+		
 		self.imu.Update()
+		
 		if((math.fabs(self.imu.data["accX"]) > 2.0) & (self.flightState == 0)):
 			flightState = 1
 		if((math.fabs(self.imu.data["accX"]) < 2.0) & (self.flightState == 1)):
@@ -152,23 +164,32 @@ class Driver(object):
 			self.flightState = 2
 		if((self.flightState == 2) & (self.mc.rotate == 3)):
 			self.flightState = 3
+		
 		if(not self.gpsProc):
 			gpsThread = threading.Thread(name="gps-thread", target=self.GPSThread)
 			gpsThread.start()
+		
 		rotRate = 0
 		rot = self.imu.data["rot"]
+		magY = self.imu.data["magY"]
+		magZ = self.imu.data["magZ"]
 		imuTime = self.imu.data["time"]
-		if(rot >= self.lastRot):
-			rotRate = ((rot - self.lastRot) / (imuTime - self.lastIMUTime))
-		else:
-			rotRate = (((360.0 - self.lastRot) + rot) / (imuTime - self.lastIMUTime))
+		
+		delta = self.angle_between((magY, magZ), (lastMagY, lastMagZ))
+		rotRate = delta / (imuTime - lastIMUTime)
+		
+		print(rot, rotRate)
 		#self.mc.Update(rot, rotRate)
-		self.lastRotRate = rotRate
+		self.lastIMUTime = imuTime
+		self.lastMagY = magY
+		self.lastMagZ = magZ
+		
 		self.WriteData(self.gps.data, self.imu.data, self.tid.data)
-		if(not self.tid.data["bTop"] == -1):
-			print(self.tid.data["index"])
+		
 		self.tx.Update()
+		
 		self.index += 1
+		
 		#time.sleep(0.01)
 		print("Update: " + str(time.time() - testStart))
 
