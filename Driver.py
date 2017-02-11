@@ -3,11 +3,11 @@ import subprocess
 import os
 import math
 from RecordVideo import RecordVideo
-import ReadIMU
-import ReadGPS
-import SendData
-import MotorController
-import TargetID
+from ReadIMU import ReadIMU
+from ReadGPS import ReadGPS
+from SendData import SendData
+from MotorController import MotorController
+from TargetID import TargetID
 
 class Driver(object):
 
