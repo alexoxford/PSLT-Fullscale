@@ -111,14 +111,14 @@ class TargetID(object):
 				
 				
 				#-----this is temporary-----
-				cv2.imwrite("/home/pi/Desktop/PSLT-Fullscale/Data/output{0}.jpg".format(index), output)
+				cv2.imwrite("/home/pi/Desktop/PSLT-Fullscale/Data/output{0}.jpg".format(self.index), output)
 				#---------------------------
 			else:
 				top = -1
 				bottom = -1
 				left = -1
 				right = -1
-				cv2.imwrite("/home/pi/Desktop/PSLT-Fullscale/Data/output{0}.jpg".format(index), frame)
+				cv2.imwrite("/home/pi/Desktop/PSLT-Fullscale/Data/output{0}.jpg".format(self.index), frame)
 				
 			if(i == 0):
 				self.data["bTop"] = top
@@ -137,7 +137,7 @@ class TargetID(object):
 				self.data["yRight"] = right
 				
 		self.data["index"] = self.index
-		index += 1
+		self.index += 1
 		self.data["time"] = time.time()
 		#print self.data
 	
