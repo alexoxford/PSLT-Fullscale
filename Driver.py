@@ -94,6 +94,9 @@ class Driver(object):
 		self.vid.Update(flush=True)
 		#print("Flush: " + str(time.time() - testStart))
 		self.processing = False
+		
+	def GPSThread(self):
+		self.gps.Update()
 
 	def __init__(self):
 		self.vid = RecordVideo()
@@ -134,6 +137,7 @@ class Driver(object):
 				quit = True
 
 	def Update(self):
+		testStart = time.time()
 		if(not self.processing):
 			videoThread = threading.Thread(name="video-thread", target=self.VideoThread)
 			videoThread.start()
@@ -145,8 +149,9 @@ class Driver(object):
 			self.flightState = 2
 		if((self.flightState == 2) & (self.mc.rotate == 3)):
 			self.flightState = 3
-		self.gps.Update()
-		testStart = time.time()
+		if(not self.gpsProc):
+			gpsThread = threading.Thread(name="gps-thread", target=self.GPSThread)
+			gpsThread.start()
 		rotRate = 0
 		rot = self.imu.data["rot"]
 		imuTime = self.imu.data["time"]
@@ -162,7 +167,7 @@ class Driver(object):
 		self.tx.Update()
 		self.index += 1
 		#time.sleep(0.01)
-		print("Everything else: " + str(time.time() - testStart))
+		print("Update: " + str(time.time() - testStart))
 
 	def End(self):
 		self.vid.End()
