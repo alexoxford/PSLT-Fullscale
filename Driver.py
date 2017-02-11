@@ -135,7 +135,7 @@ class Driver(object):
 
 	def Update(self):
 		if(not self.processing):
-			videoThread = threading.Thread(name="video-thread", target=VideoThread)
+			videoThread = threading.Thread(name="video-thread", target=self.VideoThread)
 			videoThread.start()
 		self.imu.Update()
 		if((math.fabs(self.imu.data["accX"]) > 2.0) & (self.flightState == 0)):
