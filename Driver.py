@@ -97,7 +97,7 @@ class Driver(object):
 		self.stop = time.time()
 		self.flightState = 0
 		with open("/home/pi/Desktop/PSLT-Fullscale/Data/FlightData.csv", "wb") as dataFile:
-			dataFile.write("Index," + gpsHeader + ',' + imuHeader + ',' + vidHeader + ',' + "Motor Speed," + "Driver Time" + '\n')
+			dataFile.write("Index," + self.gpsHeader + ',' + self.imuHeader + ',' + self.vidHeader + ',' + "Motor Speed," + "Driver Time" + '\n')
 			dataFile.flush()
 			os.fsync(dataFile.fileno())
 		self.vid.Update(picture=True)
