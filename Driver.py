@@ -110,10 +110,10 @@ class Driver(object):
 		quit = False
 		while(not quit):
 			try:
-				Update()
+				self.Update()
 
 			except KeyboardInterrupt:
-				End()
+				self.End()
 				quit = True
 
 	def Update(self):
