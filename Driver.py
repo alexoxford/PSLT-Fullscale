@@ -31,7 +31,7 @@ class Driver(object):
 	def WriteData(self, dictGPS, dictIMU, dictVid):
 		data = str(self.index) + ','
 		
-		print(dictGPS)
+		print(self.gps.data)
 		data += str(dictGPS["lat"]) + ','
 		data += str(dictGPS["lon"]) + ','
 		data += str(dictGPS["climb"]) + ','
