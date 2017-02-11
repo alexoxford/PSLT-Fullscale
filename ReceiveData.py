@@ -27,8 +27,8 @@ while(not quit):
 			lastIMUTime = imuTime
 			
 			os.system("cls")
-			print("Altitude: {0}ft AGL".format(alt))
-			print("Velocity: {0}ft/s".format(vel))
+			print("Altitude: {0} ft ASL".format(alt))
+			print("Velocity: {0} ft/s".format(vel))
 			
 			#gpsData = dataList[1] + "," + dataList[2]
 			#print gpsData
