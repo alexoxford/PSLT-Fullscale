@@ -10,7 +10,7 @@ class RecordVideo(object):
 		self.videoFile = open("/media/pi/Samsung USB/video.h264", "wb")
 		self.camera = PiCamera()
 		self.camera.resolution = (800, 600)
-		self.camera.start_recording(videoFile)
+		self.camera.start_recording(self.videoFile)
 		print("Camera warmup...")
 		print("2...")
 		time.sleep(1)
