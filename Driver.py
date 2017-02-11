@@ -145,6 +145,8 @@ class Driver(object):
 		#self.mc.Update(rot, rotRate)
 		self.lastRotRate = rotRate
 		self.WriteData(self.gps.data, self.imu.data, self.tid.data)
+		if(not self.tid.data["bTop"] == -1):
+			print(self.tid.data["index"])
 		self.tx.Update()
 		self.index += 1
 		#time.sleep(0.01)
