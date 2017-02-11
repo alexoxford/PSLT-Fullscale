@@ -6,8 +6,8 @@ class ReadGPS(object):
 	def __init__(self):
 		print("ReadGPS is starting")
 
-		session = gps.gps("localhost", "2947")
-		session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
+		self.session = gps.gps("localhost", "2947")
+		self.session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
 
 		self.lastLat = 0.0
 		self.lastLon = 0.0
@@ -19,7 +19,7 @@ class ReadGPS(object):
 
 	def Update(self):
 		errs = 0
-		report = session.next()
+		report = self.session.next()
 		if report["class"] == "TPV":
 			if hasattr(report, "lat"):
 				lastLat = report.lat
