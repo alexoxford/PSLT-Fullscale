@@ -59,7 +59,7 @@ class ReadGPS(object):
 			self.data["track"] = lastTrack
 			self.data["errs"] = errs
 			self.data["time"] = time.time()
-			print("From GPS: ", self.data)
+		print("From GPS: ", self.data)
 
 	def End(self):
 		print("ReadGPS is ending")
