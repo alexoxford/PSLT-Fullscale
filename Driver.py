@@ -138,7 +138,6 @@ class Driver(object):
 			videoThread = threading.Thread(name="video-thread", target=self.VideoThread)
 			videoThread.start()
 		self.imu.Update()
-		testStart = time.time()
 		if((math.fabs(self.imu.data["accX"]) > 2.0) & (self.flightState == 0)):
 			flightState = 1
 		if((math.fabs(self.imu.data["accX"]) < 2.0) & (self.flightState == 1)):
@@ -146,8 +145,9 @@ class Driver(object):
 			self.flightState = 2
 		if((self.flightState == 2) & (self.mc.rotate == 3)):
 			self.flightState = 3
-		print("MC: " + str(time.time() - testStart))
+		testStart = time.time()
 		self.gps.Update()
+		print("GPS: " + str(time.time() - testStart))
 		rotRate = 0
 		rot = self.imu.data["rot"]
 		imuTime = self.imu.data["time"]
