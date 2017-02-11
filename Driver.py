@@ -113,6 +113,7 @@ class Driver(object):
 			diff -= 360
 		elif(diff < -180):
 			diff += 360
+		return diff
 
 	def __init__(self):
 		self.vid = RecordVideo()
@@ -175,12 +176,15 @@ class Driver(object):
 			gpsThread.start()
 		
 		rotRate = 0
+		rotThreshold = 0
 		rot = self.imu.data["rot"]
 		magY = self.imu.data["magY"]
 		magZ = self.imu.data["magZ"]
 		imuTime = self.imu.data["time"]
 		
 		delta = self.angle_between((magY, magZ), (self.lastMagY, self.lastMagZ))
+		if(math.fabs(delta) < rotThreshold):
+			delta = 0
 		rotRate = delta / (imuTime - self.lastIMUTime)
 		
 		print(rot, delta, rotRate)
