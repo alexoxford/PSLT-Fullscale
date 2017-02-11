@@ -122,11 +122,19 @@ class Driver(object):
 		if(self.elapsed > 1):
 			self.start = time.time()
 			self.elapsed = 0
+			testStart = time.time()
 			self.vid.Update(picture=True)
+			print(str(time.time() - testStart))
+			testStart = time.time()
 			self.tid.Update()
+			print(str(time.time() - testStart))
 		else:
+			testStart = time.time()
 			self.vid.Update()
+			print(str(time.time() - testStart))
+		testStart = time.time()
 		self.imu.Update()
+		print(str(time.time() - testStart))
 		if((math.fabs(self.imu.data["accX"]) > 2.0) & (self.flightState == 0)):
 			flightState = 1
 		if((math.fabs(self.imu.data["accX"]) < 2.0) & (self.flightState == 1)):
@@ -134,7 +142,9 @@ class Driver(object):
 			self.flightState = 2
 		if((self.flightState == 2) & (self.mc.rotate == 3)):
 			self.flightState = 3
+		testStart = time.time()
 		self.gps.Update()
+		print(str(time.time() - testStart))
 		rotRate = 0
 		rot = self.imu.data["rot"]
 		imuTime = self.imu.data["time"]
@@ -144,10 +154,14 @@ class Driver(object):
 			rotRate = (((360.0 - self.lastRot) + rot) / (imuTime - self.lastIMUTime))
 		#self.mc.Update(rot, rotRate)
 		self.lastRotRate = rotRate
+		testStart = time.time()
 		self.WriteData(self.gps.data, self.imu.data, self.tid.data)
+		print(str(time.time() - testStart))
 		if(not self.tid.data["bTop"] == -1):
 			print(self.tid.data["index"])
+		testStart = time.time()
 		self.tx.Update()
+		print(str(time.time() - testStart))
 		self.index += 1
 		#time.sleep(0.01)
 
