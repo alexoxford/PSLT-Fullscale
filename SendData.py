@@ -5,7 +5,7 @@ from collections import deque
 
 class SendData(object):
 
-	def get_last_row(csv_filename):
+	def get_last_row(self, csv_filename):
 		try:
 			with open(csv_filename, "rb") as f:
 				try:
@@ -22,7 +22,7 @@ class SendData(object):
 		self.ser = serial.Serial("/dev/ttyUSB0", 9600)
 
 	def Update(self):
-		data = get_last_row("/home/pi/Desktop/PSLT-Fullscale/Data/FlightData.csv")
+		data = self.get_last_row("/home/pi/Desktop/PSLT-Fullscale/Data/FlightData.csv")
 
 		if(not data == None):
 			#print data
