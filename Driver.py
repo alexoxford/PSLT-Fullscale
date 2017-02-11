@@ -194,7 +194,7 @@ class Driver(object):
 		rotRate = delta / (deltaTime)
 		
 		self.mc.Update(rot, delta, rotRate)
-		print(self.mc.speed, rotRate)
+		print(self.mc.speed, self.mc.distRot, rotRate)
 		self.lastIMUTime = imuTime
 		self.lastMagY = magY
 		self.lastMagZ = magZ

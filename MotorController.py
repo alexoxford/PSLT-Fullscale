@@ -63,7 +63,7 @@ class MotorController(object):
 		self.distRot += delta
 		
 		if(self.rotate == 1):
-			if(self.distRot >= 720.0):
+			if(math.fabs(self.distRot) >= 720.0):
 				self.rotate = 2
 		elif(self.rotate == 2):
 			if(self.stopRotation()):
