@@ -54,5 +54,5 @@ class MotorController(object):
 				self.setMotorSpeed(0)
 				self.rotate = 3
 
-	def End(self)
+	def End(self):
 		print("MotorController is ending")
