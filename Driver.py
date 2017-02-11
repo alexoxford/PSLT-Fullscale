@@ -170,7 +170,11 @@ class Driver(object):
 		if((math.fabs(self.imu.data["accX"]) < 2.0) & (self.flightState == 1)):
 			print("BURNOUT")
 			self.mc.startRotation(self.imu.data["rot"])
+			print("ROLL")
 			self.flightState = 2
+		if(((self.flightState == 2) & ((time.time() - self.launchTime) > 10))):
+			self.mc.rotate = 2
+			print("COUNTER ROLL")
 		if(((self.flightState == 2) & ((self.mc.rotate == 3) | ((time.time() - self.launchTime) > 15)))):
 			self.flightState = 3
 			self.mc.rotate = 3
@@ -181,7 +185,7 @@ class Driver(object):
 			gpsThread.start()
 		
 		rotRate = 0
-		rotThreshold = 1
+		rotThreshold = 0
 		rot = self.imu.data["rot"]
 		magY = self.imu.data["magY"]
 		magZ = self.imu.data["magZ"]
