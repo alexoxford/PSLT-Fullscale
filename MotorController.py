@@ -33,10 +33,12 @@ class MotorController(object):
 		#sets the motor to the given speed
 		if(speed > 1.0):
 			speed = 1.0
+		if(speed < -1.0):
+			speed = -1.0
 		self.speed = speed
 		if(speed < 0.0):
 			GPIO.output(21,0)
-			self.p.start(speed*100.0)
+			self.p.start(speed*-100.0)
 		elif(speed > 0.0):
 			GPIO.output(21,1)
 			self.p.start(speed*100.0)
