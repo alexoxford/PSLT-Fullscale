@@ -9,10 +9,10 @@ class MotorController(object):
 
 		done = False
 
-		if(math.fabs(rotRate) > 100):
-			speed = 1.0 if rotRate >= 0.0 else -1.0
-		elif(math.fabs(rotRate) > 2):
-			speed = rotRate / 100.0
+		if(math.fabs(self.rotRate) > 100):
+			speed = 1.0 if self.rotRate >= 0.0 else -1.0
+		elif(math.fabs(self.rotRate) > 2):
+			speed = self.rotRate / 100.0
 		else:
 			speed = 0.0
 			done = True
