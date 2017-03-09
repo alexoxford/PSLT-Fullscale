@@ -35,19 +35,19 @@ class Driver(object):
 		
 		data += str(dictGPS["lat"]) + ','
 		data += str(dictGPS["lon"]) + ','
-		data += str(dictGPS["climb"]) + ','
-		data += str(dictGPS["alt"]) + ','
-		data += str(dictGPS["speed"]) + ','
-		data += str(dictGPS["track"]) + ','
-		data += str(dictGPS["errs"]) + ','
-		data += str(dictGPS["time"]) + ','
+		#data += str(dictGPS["climb"]) + ','
+		#data += str(dictGPS["alt"]) + ','
+		#data += str(dictGPS["speed"]) + ','
+		#data += str(dictGPS["track"]) + ','
+		#data += str(dictGPS["errs"]) + ','
+		#data += str(dictGPS["time"]) + ','
 		
 		data += str(dictIMU["accX"]) + ','
 		data += str(dictIMU["accY"]) + ','
 		data += str(dictIMU["accZ"]) + ','
-		data += str(dictIMU["gyroX"]) + ','
-		data += str(dictIMU["gyroY"]) + ','
-		data += str(dictIMU["gyroZ"]) + ','
+		#data += str(dictIMU["gyroX"]) + ','
+		#data += str(dictIMU["gyroY"]) + ','
+		#data += str(dictIMU["gyroZ"]) + ','
 		data += str(dictIMU["magX"]) + ','
 		data += str(dictIMU["magY"]) + ','
 		data += str(dictIMU["magZ"]) + ','
@@ -122,8 +122,8 @@ class Driver(object):
 		self.tx = SendData()
 		self.mc = MotorController()
 		self.tid = TargetID()
-		self.gpsHeader = "Lat,Lon,Climb,Alt,Speed,Heading,GPS Errors,GPS Time"
-		self.imuHeader = "Acc X,Acc Y,Acc Z,Gyro X,Gyro Y,Gyro Z,Mag X,Mag Y,Mag Z,Alt,Roll,IMU Errors,IMU Time"
+		self.gpsHeader = "Lat,Lon"
+		self.imuHeader = "Acc X,Acc Y,Acc Z,Mag X,Mag Y,Mag Z,Alt,Roll,IMU Errors,IMU Time"
 		#self.vidHeader = "R Top,R Bottom,R Left,R Right,B Top,B Bottom,B Left,B Right,Y Top,Y Bottom,Y Left,Y Right,Vid Index,Vid Time"
 		self.vidHeader = "B Top,B Bottom,B Left,B Right,Vid Index,Vid Time"
 		self.index = 0
@@ -155,8 +155,6 @@ class Driver(object):
 				quit = True
 
 	def Update(self):
-		testStart = time.time()
-		
 		if(not self.vidProc):
 			videoThread = threading.Thread(name="video-thread", target=self.VideoThread)
 			videoThread.start()
