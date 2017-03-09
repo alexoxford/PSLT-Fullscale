@@ -19,15 +19,26 @@ class SendData(object):
 
 	def __init__(self):
 		print "SendData is starting"
-		self.ser = serial.Serial("/dev/ttyUSB0", 9600)
+		try:
+			self.ser = serial.Serial("/dev/ttyUSB0", 9600)
+		except:
+			pass
 
 	def Update(self):
 		data = self.get_last_row("/home/pi/Desktop/PSLT-Fullscale/Data/FlightData.csv")
 
 		if(not data == None):
 			data = ','.join(data)
+			data += '\n'
 			#print data
-			self.ser.write(data)
+			try:
+				self.ser.write(data)
+			except :
+				try:
+					self.ser = serial.Serial("/dev/ttyUSB0", 9600)
+				except:
+					pass
+				
 
 	def End(self):
 		print "SendData is ending"
