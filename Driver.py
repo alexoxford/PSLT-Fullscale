@@ -96,6 +96,8 @@ class Driver(object):
 			#testStart = time.time()
 			self.vid.Update(flush=True)
 			#print("Flush: " + str(time.time() - testStart))
+		except KeyboardInterrupt:
+			raise
 		except:
 			pass
 		self.vidProc = False
@@ -104,6 +106,8 @@ class Driver(object):
 		self.gpsProc = True
 		try:
 			self.gps.Update()
+		except KeyboardInterrupt:
+			raise
 		except:
 			pass
 		self.gpsProc = False
@@ -152,7 +156,6 @@ class Driver(object):
 		quit = False
 		while(not quit):
 			try:
-				print "Updating"
 				self.Update()
 			except KeyboardInterrupt:
 				self.End()
@@ -167,6 +170,8 @@ class Driver(object):
 		
 		try:
 			self.imu.Update()
+		except KeyboardInterrupt:
+			raise
 		except:
 			pass
 		
@@ -208,6 +213,8 @@ class Driver(object):
 		
 		try:
 			self.mc.Update(rot, delta, rotRate)
+		except KeyboardInterrupt:
+			raise
 		except:
 			pass
 		#print(self.mc.speed, self.mc.distRot, rotRate)
@@ -217,11 +224,15 @@ class Driver(object):
 		
 		try:
 			self.WriteData(self.gps.data, self.imu.data, self.tid.data)
+		except KeyboardInterrupt:
+			raise
 		except:
 			pass
 		
 		try:
 			self.tx.Update()
+		except KeyboardInterrupt:
+			raise
 		except:
 			pass
 		

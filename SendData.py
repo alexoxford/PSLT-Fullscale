@@ -25,6 +25,8 @@ class SendData(object):
 			try:
 				self.ser = serial.Serial("/dev/ttyUSB0", 9600)
 				success = True
+			except KeyboardInterrupt:
+				raise
 			except:
 				pass
 
@@ -37,6 +39,8 @@ class SendData(object):
 			#print data
 			try:
 				self.ser.write(data)
+			except KeyboardInterrupt:
+				raise
 			except:
 				self.fails += 1
 				if(fails > 5):
