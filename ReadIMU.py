@@ -9,9 +9,9 @@ class ReadIMU(object):
 		self.imu = AltIMU()
 		self.imu.enable(True, True, True, True, True)
 		self.start = time.time()
-		self.motorState = 0
+		#self.motorState = 0
 		self.lastAccList = [0.0, 0.0, 0.0]
-		self.lastGyroList = [0.0, 0.0, 0.0]
+		#self.lastGyroList = [0.0, 0.0, 0.0]
 		self.lastMagList = [0.0, 0.0, 0.0]
 		self.lastAlt = 0.0
 		self.data = {}
@@ -26,16 +26,16 @@ class ReadIMU(object):
 			else:
 				errs += 1
 
-		stop = time.time() - self.start
-		self.start = time.time()
-		deltaT = stop
-		gyroList = self.imu.getComplementaryAngles(deltaT=deltaT)
+		#stop = time.time() - self.start
+		#self.start = time.time()
+		#deltaT = stop
+		#gyroList = self.imu.getComplementaryAngles(deltaT=deltaT)
 
-		for i, gyro in enumerate(gyroList):
-			if(not gyro == None):
-				self.lastGyroList[i] = gyro
-			else:
-				errs += 1
+		#for i, gyro in enumerate(gyroList):
+		#	if(not gyro == None):
+		#		self.lastGyroList[i] = gyro
+		#	else:
+		#		errs += 1
 
 		magList = self.imu.getMagnetometerRaw()
 
@@ -56,10 +56,10 @@ class ReadIMU(object):
 		self.data["accX"] = self.lastAccList[0]
 		self.data["accY"] = self.lastAccList[1]
 		self.data["accZ"] = self.lastAccList[2]
-		self.data["gyroX"] = self.lastGyroList[0]
-		self.data["gyroY"] = self.lastGyroList[1]
-		self.data["gyroZ"] = self.lastGyroList[2]
-		self.data["magX"] = self.lastMagList[0]
+		#self.data["gyroX"] = self.lastGyroList[0]
+		#self.data["gyroY"] = self.lastGyroList[1]
+		#self.data["gyroZ"] = self.lastGyroList[2]
+		#self.data["magX"] = self.lastMagList[0]
 		self.data["magY"] = self.lastMagList[1]
 		self.data["magZ"] = self.lastMagList[2]
 		self.data["alt"] = self.lastAlt

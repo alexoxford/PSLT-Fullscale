@@ -48,7 +48,7 @@ class Driver(object):
 		#data += str(dictIMU["gyroX"]) + ','
 		#data += str(dictIMU["gyroY"]) + ','
 		#data += str(dictIMU["gyroZ"]) + ','
-		data += str(dictIMU["magX"]) + ','
+		#data += str(dictIMU["magX"]) + ','
 		data += str(dictIMU["magY"]) + ','
 		data += str(dictIMU["magZ"]) + ','
 		data += str(dictIMU["alt"]) + ','
@@ -84,25 +84,29 @@ class Driver(object):
 	def VideoThread(self):
 		self.vidProc = True
 		#testStart = time.time()
-		self.vid.Update(picture=True)
-		#print("Pic: " + str(time.time() - testStart))
-		
-		#testStart = time.time()
-		self.tid.Update()
-		#print("Target ID: " + str(time.time() - testStart))
-		
-		#testStart = time.time()
-		self.vid.Update(flush=True)
-		#print("Flush: " + str(time.time() - testStart))
+		try:
+			self.vid.Update(picture=True)
+			#print("Pic: " + str(time.time() - testStart))
+
+			#testStart = time.time()
+			if(self.flightState > 0):
+				self.tid.Update()
+			#print("Target ID: " + str(time.time() - testStart))
+
+			#testStart = time.time()
+			self.vid.Update(flush=True)
+			#print("Flush: " + str(time.time() - testStart))
+		except:
+			pass
 		self.vidProc = False
 		
 	def GPSThread(self):
 		self.gpsProc = True
-		self.gps.Update()
+		try:
+			self.gps.Update()
+		except:
+			pass
 		self.gpsProc = False
-		
-	def unit_vector(self, vector):
-		return vector / np.linalg.norm(vector)
 
 	def angle_between(self, v1, v2):
 		v1_a = math.atan2(v1[0], v1[1])
@@ -123,7 +127,7 @@ class Driver(object):
 		self.mc = MotorController()
 		self.tid = TargetID()
 		self.gpsHeader = "Lat,Lon"
-		self.imuHeader = "Acc X,Acc Y,Acc Z,Mag X,Mag Y,Mag Z,Alt,Roll,IMU Errors,IMU Time"
+		self.imuHeader = "Acc X,Acc Y,Acc Z,Mag Y,Mag Z,Alt,Roll,IMU Errors,IMU Time"
 		#self.vidHeader = "R Top,R Bottom,R Left,R Right,B Top,B Bottom,B Left,B Right,Y Top,Y Bottom,Y Left,Y Right,Vid Index,Vid Time"
 		self.vidHeader = "B Top,B Bottom,B Left,B Right,Vid Index,Vid Time"
 		self.index = 0
@@ -149,17 +153,21 @@ class Driver(object):
 		while(not quit):
 			try:
 				self.Update()
-
 			except KeyboardInterrupt:
 				self.End()
 				quit = True
+			except:
+				pass
 
 	def Update(self):
 		if(not self.vidProc):
 			videoThread = threading.Thread(name="video-thread", target=self.VideoThread)
 			videoThread.start()
 		
-		self.imu.Update()
+		try:
+			self.imu.Update()
+		except:
+			pass
 		
 		if((math.fabs(self.imu.data["accX"]) > 2.0) & (self.flightState == 0)):
 			self.flightState = 1
@@ -170,10 +178,10 @@ class Driver(object):
 			self.mc.startRotation(self.imu.data["rot"])
 			print("ROLL")
 			self.flightState = 2
-		if(((self.flightState == 2) & ((time.time() - self.launchTime) > 10))):
+		if(((self.flightState == 2) & ((time.time() - self.launchTime) > 9))):
 			self.mc.rotate = 2
 			print("COUNTER ROLL")
-		if(((self.flightState == 2) & ((self.mc.rotate == 3) | ((time.time() - self.launchTime) > 15)))):
+		if(((self.flightState == 2) & ((self.mc.rotate == 3) | ((time.time() - self.launchTime) > 12.5)))):
 			self.flightState = 3
 			self.mc.rotate = 3
 			print("END ROTATION")
@@ -183,7 +191,7 @@ class Driver(object):
 			gpsThread.start()
 		
 		rotRate = 0
-		rotThreshold = 0
+		rotThreshold = 1
 		rot = self.imu.data["rot"]
 		magY = self.imu.data["magY"]
 		magZ = self.imu.data["magZ"]
@@ -193,22 +201,33 @@ class Driver(object):
 		if(math.fabs(delta) < rotThreshold):
 			delta = 0
 		deltaTime = imuTime - self.lastIMUTime
+		if(deltaTime == 0):
+			deltaTime = 0.05
 		rotRate = delta / (deltaTime)
 		
-		self.mc.Update(rot, delta, rotRate)
-		print(self.mc.speed, self.mc.distRot, rotRate)
+		try:
+			self.mc.Update(rot, delta, rotRate)
+		except:
+			pass
+		#print(self.mc.speed, self.mc.distRot, rotRate)
 		self.lastIMUTime = imuTime
 		self.lastMagY = magY
 		self.lastMagZ = magZ
 		
-		self.WriteData(self.gps.data, self.imu.data, self.tid.data)
+		try:
+			self.WriteData(self.gps.data, self.imu.data, self.tid.data)
+		except:
+			pass
 		
-		self.tx.Update()
+		try:
+			self.tx.Update()
+		except:
+			pass
 		
 		self.index += 1
 		
 		#time.sleep(0.01)
-		print("Update: " + str(time.time() - testStart))
+		#print("Update: " + str(time.time() - testStart))
 
 	def End(self):
 		self.vid.End()

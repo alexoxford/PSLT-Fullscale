@@ -18,11 +18,15 @@ class SendData(object):
 		return lastrow
 
 	def __init__(self):
-		print "SendData is starting"
-		try:
-			self.ser = serial.Serial("/dev/ttyUSB0", 9600)
-		except:
-			pass
+		print("SendData is starting")
+		self.fails = 0
+		success = False
+		while(not success):
+			try:
+				self.ser = serial.Serial("/dev/ttyUSB0", 9600)
+				success = True
+			except:
+				pass
 
 	def Update(self):
 		data = self.get_last_row("/home/pi/Desktop/PSLT-Fullscale/Data/FlightData.csv")
@@ -33,12 +37,16 @@ class SendData(object):
 			#print data
 			try:
 				self.ser.write(data)
-			except :
-				try:
-					self.ser = serial.Serial("/dev/ttyUSB0", 9600)
-				except:
-					pass
-				
+			except:
+				self.fails += 1
+				if(fails > 5):
+					print("Attempting to restart serial connection")
+					try:
+						self.ser = serial.Serial("/dev/ttyUSB0", 9600)
+						print("Connection reestablished")
+						fails = 0
+					except:
+						print("Connection failed")
 
 	def End(self):
 		print "SendData is ending"
