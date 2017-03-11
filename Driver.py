@@ -152,6 +152,7 @@ class Driver(object):
 		quit = False
 		while(not quit):
 			try:
+				print "Updating"
 				self.Update()
 			except KeyboardInterrupt:
 				self.End()
