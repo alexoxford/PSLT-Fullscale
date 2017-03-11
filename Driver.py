@@ -157,7 +157,7 @@ class Driver(object):
 				self.End()
 				quit = True
 			except:
-				pass
+				print("Unexpected error:", sys.exc_info()[0])
 
 	def Update(self):
 		if(not self.vidProc):
