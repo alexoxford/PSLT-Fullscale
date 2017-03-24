@@ -9,22 +9,24 @@ class TargetID(object):
 		print("TargetID is starting")
 		self.data = {}
 		self.index = 0
+		self.rocketMask = cv2.imread("/home/pi/Desktop/PSLT-Fullscale/Data/mask.jpg")
 		#self.Update()
 		
 	def Update(self):
 		#frame = cv2.imread("C:\\Users\\Alex\\Desktop\\test.jpg")
 		frame = cv2.imread("/home/pi/Desktop/PSLT-Fullscale/Data/img.jpg")
-		hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-		#hsv = frame
+		#hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+		hsv = frame
 		boundaries = [
-		([125, 0, 0], [155, 255, 255])
+		([70, 60, 80], [100, 90, 110])
 		]
 		for i, (lower, upper) in enumerate(boundaries):
 			lower = np.array(lower, dtype = "uint8")
 			upper = np.array(upper, dtype = "uint8")
 			
+			hsv = cv2.bitwise_and(hsv, self.rocketMask)
 			mask = cv2.inRange(hsv, lower, upper)
-			output = cv2.bitwise_and(frame, frame, mask = mask)
+			#output = cv2.bitwise_and(frame, frame, mask = mask)
 			
 			pxs = cv2.countNonZero(mask)
 			
@@ -106,8 +108,7 @@ class TargetID(object):
 				output = copy.copy(frame)
 				cv2.rectangle(output,(left, top),(left+iWidth, top+iHeight),(0,255,0))
 
-				#cv2.imshow("images", np.hstack([frame, output]))
-				#cv2.waitKey(0)
+				#cv2.imshow("images", np.hstack([frame, output])); cv2.waitKey(0)
 				
 				
 				#-----this is temporary-----
