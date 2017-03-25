@@ -14,7 +14,7 @@ quit = False
 while(not quit):
 	try:
 		data = ser.readline()
-		if(len(data.split(',')) == 20):
+		if(len(data.split(',')) == 23):
 			with open("exData.csv", 'ab') as f:
 				f.write(data)
 

@@ -4,6 +4,16 @@ import math
 
 class ReadIMU(object):
 
+	def angle_between(self, v1, v2):
+		v1_a = math.atan2(v1[0], v1[1])
+		v2_a = math.atan2(v2[0], v2[1])
+		diff = math.degrees(v1_a - v2_a)
+		if(diff > 180):
+			diff -= 360
+		elif(diff < -180):
+			diff += 360
+		return diff
+	
 	def __init__(self):
 		print("ReadIMU is starting")
 		self.imu = AltIMU()
@@ -14,6 +24,10 @@ class ReadIMU(object):
 		#self.lastGyroList = [0.0, 0.0, 0.0]
 		self.lastMagList = [0.0, 0.0, 0.0]
 		self.lastAlt = 0.0
+		#self.lastRoll = 0.0
+		#self.rollRate = 0.0
+		#self.dRoll = 0.0
+		self.lastTime = time.time()
 		self.data = {}
 
 	def Update(self):
@@ -38,6 +52,8 @@ class ReadIMU(object):
 		#		errs += 1
 
 		magList = self.imu.getMagnetometerRaw()
+		
+		dRoll = self.angle_between((magList[1], magList[2] - 4500), (self.lastMagList[1], self.lastMagList[2] - 4500))
 
 		for i, mag in enumerate(magList):
 			if(not mag == None):
@@ -45,7 +61,16 @@ class ReadIMU(object):
 			else:
 				errs += 1
 
-		rot = math.degrees(math.atan2(self.lastMagList[1], self.lastMagList[2]) + math.pi)
+		roll = math.degrees(math.atan2(self.lastMagList[1], self.lastMagList[2] - 4500) + math.pi)
+		
+		rollThreshold = 1
+		dTime = time.time() - self.lastTime
+		self.lastTime = time.time()
+		rollRate = 0.0
+		if(math.fabs(dRoll) > rollThreshold):		
+			if(dTime == 0.0):
+				dTime = 0.05
+			rollRate = dRoll / dTime
 
 		alt = self.imu.getAltitude()
 		if(not alt == None):
@@ -59,11 +84,13 @@ class ReadIMU(object):
 		#self.data["gyroX"] = self.lastGyroList[0]
 		#self.data["gyroY"] = self.lastGyroList[1]
 		#self.data["gyroZ"] = self.lastGyroList[2]
-		#self.data["magX"] = self.lastMagList[0]
+		self.data["magX"] = self.lastMagList[0]
 		self.data["magY"] = self.lastMagList[1]
 		self.data["magZ"] = self.lastMagList[2]
 		self.data["alt"] = self.lastAlt
-		self.data["rot"] = rot
+		self.data["roll"] = roll
+		self.data["rollRate"] = rollRate
+		self.data["dRoll"] = dRoll
 		self.data["errs"] = errs
 		self.data["time"] = time.time()
 

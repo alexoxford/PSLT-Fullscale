@@ -9,24 +9,29 @@ class MotorController(object):
 
 		done = False
 
-		if(math.fabs(self.rotRate) > 100):
-			speed = 1.0 if self.rotRate >= 0.0 else -1.0
-		elif(math.fabs(self.rotRate) > 2):
-			speed = self.rotRate / 100.0
+		diff = self.rotRate - self.burnoutRoll
+		if(math.fabs(diff) > 100):
+			speed = 1.0 if diff >= 0.0 else -1.0
+		elif(math.fabs(diff) > 2):
+			speed = diff / 100.0
 		else:
 			speed = 0.0
 			done = True
-		self.setMotorSpeed(speed)
+		self.setMotorSpeed(speed) #positive is a CCW moment; negative is CW
 
 		#if the rotation rate is 0 (or very close to it) return True, else return False
 		return done
 
-	def startRotation(self, rotation):
+	def startRotation(self, rotation, rollRate):
 		#starts the rotation and initializes the variables
 		#rotation is the current rotation in degrees
 		self.rotate = 1
-		self.setMotorSpeed(1.0)
 		self.startRot = rotation
+		self.burnoutRoll = rollRate
+		if(rollRate > 0.0): #CW
+			self.setMotorSpeed(-1.0)
+		else: #CCW
+			self.setMotorSpeed(1.0)
 		self.distRot = 0
 
 	def setMotorSpeed(self, speed):
@@ -54,6 +59,7 @@ class MotorController(object):
 		self.rotRate = -1  #the current rotation rate; this will be updated from outside this class
 		self.rotate = 0
 		self.speed = 0
+		self.burnoutRoll = 0.0
 		
 		GPIO.setmode(GPIO.BOARD)
 		GPIO.setup([21,23], GPIO.OUT)

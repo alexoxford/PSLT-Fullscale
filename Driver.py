@@ -48,11 +48,13 @@ class Driver(object):
 		#data += str(dictIMU["gyroX"]) + ','
 		#data += str(dictIMU["gyroY"]) + ','
 		#data += str(dictIMU["gyroZ"]) + ','
-		#data += str(dictIMU["magX"]) + ','
+		data += str(dictIMU["magX"]) + ','
 		data += str(dictIMU["magY"]) + ','
 		data += str(dictIMU["magZ"]) + ','
 		data += str(dictIMU["alt"]) + ','
-		data += str(dictIMU["rot"]) + ','
+		data += str(dictIMU["roll"]) + ','
+		data += str(dictIMU["rollRate"]) + ','
+		data += str(dictIMU["dRoll"]) + ','
 		data += str(dictIMU["errs"]) + ','
 		data += str(dictIMU["time"]) + ','
 		
@@ -131,7 +133,7 @@ class Driver(object):
 		self.mc = MotorController()
 		self.tid = TargetID()
 		self.gpsHeader = "Lat,Lon"
-		self.imuHeader = "Acc X,Acc Y,Acc Z,Mag Y,Mag Z,Alt,Roll,IMU Errors,IMU Time"
+		self.imuHeader = "Acc X,Acc Y,Acc Z,Mag X,Mag Y,Mag Z,Alt,Roll,Roll Rate,Delta Roll,IMU Errors,IMU Time"
 		#self.vidHeader = "R Top,R Bottom,R Left,R Right,B Top,B Bottom,B Left,B Right,Y Top,Y Bottom,Y Left,Y Right,Vid Index,Vid Time"
 		self.vidHeader = "B Top,B Bottom,B Left,B Right,Vid Index,Vid Time"
 		self.index = 0
@@ -147,9 +149,9 @@ class Driver(object):
 		self.gps.Update()
 		self.imu.Update()
 		
-		self.lastMagY = self.imu.data["magY"]
-		self.lastMagZ = self.imu.data["magZ"]
-		self.lastIMUTime = self.imu.data["time"]
+		#self.lastMagY = self.imu.data["magY"]
+		#self.lastMagZ = self.imu.data["magZ"]
+		#self.lastIMUTime = self.imu.data["time"]
 		
 		self.tid.Update()
 		print("Initialization finished")
@@ -181,11 +183,13 @@ class Driver(object):
 			print("LAUNCH")
 		if((math.fabs(self.imu.data["accX"]) < 2.0) & (self.flightState == 1)):
 			print("BURNOUT")
-			self.mc.startRotation(self.imu.data["rot"])
+			self.mc.startRotation(self.imu.data["roll"], self.imu.data["rollRate"])
+			print("BURNOUT ROLL: " + str(self.mc.burnoutRoll))
 			print("ROLL")
 			self.flightState = 2
 		if(((self.flightState == 2) & ((time.time() - self.launchTime) > 9))):
 			self.mc.rotate = 2
+			self.mc.setMotorSpeed(0.0)
 			print("COUNTER ROLL")
 		if(((self.flightState == 2) & ((self.mc.rotate == 3) | ((time.time() - self.launchTime) > 12.5)))):
 			self.flightState = 3
@@ -196,31 +200,31 @@ class Driver(object):
 			gpsThread = threading.Thread(name="gps-thread", target=self.GPSThread)
 			gpsThread.start()
 		
-		rotRate = 0
-		rotThreshold = 1
-		rot = self.imu.data["rot"]
-		magY = self.imu.data["magY"]
-		magZ = self.imu.data["magZ"]
-		imuTime = self.imu.data["time"]
+		#rotRate = 0
+		#rotThreshold = 1
+		#rot = self.imu.data["rot"]
+		#magY = self.imu.data["magY"]
+		#magZ = self.imu.data["magZ"]
+		#imuTime = self.imu.data["time"]
 		
-		delta = self.angle_between((magY, magZ), (self.lastMagY, self.lastMagZ))
-		if(math.fabs(delta) < rotThreshold):
-			delta = 0
-		deltaTime = imuTime - self.lastIMUTime
-		if(deltaTime == 0):
-			deltaTime = 0.05
-		rotRate = delta / (deltaTime)
+		#delta = self.angle_between((magY, magZ), (self.lastMagY, self.lastMagZ))
+		#if(math.fabs(delta) < rotThreshold):
+		#	delta = 0
+		#deltaTime = imuTime - self.lastIMUTime
+		#if(deltaTime == 0):
+		#	deltaTime = 0.05
+		#rotRate = delta / (deltaTime)
 		
 		try:
-			self.mc.Update(rot, delta, rotRate)
+			self.mc.Update(self.imu.data["roll"], self.imu.data["dRoll"], self.imu.data["rollRate"])
 		except KeyboardInterrupt:
 			raise
 		except:
 			pass
 		#print(self.mc.speed, self.mc.distRot, rotRate)
-		self.lastIMUTime = imuTime
-		self.lastMagY = magY
-		self.lastMagZ = magZ
+		#self.lastIMUTime = imuTime
+		#self.lastMagY = magY
+		#self.lastMagZ = magZ
 		
 		try:
 			self.WriteData(self.gps.data, self.imu.data, self.tid.data)
