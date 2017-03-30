@@ -20,12 +20,12 @@ while(not quit):
 
 			dataList = data.split(',')
 			acc = float(dataList[3])
-			motor = float(dataList[18])
-			alt = float(dataList[8]) * 3.2808399
+			motor = float(dataList[21])
+			alt = float(dataList[9]) * 3.2808399
 			if(ground == 0.0):
 				ground = alt
 			alt -= ground
-			imuTime = float(dataList[11])
+			imuTime = float(dataList[14])
 			vel = (alt - lastAlt) / (imuTime - lastIMUTime)
 			lastAlt = alt
 			lastIMUTime = imuTime
