@@ -14,13 +14,13 @@ quit = False
 while(not quit):
 	try:
 		data = ser.readline()
-		if(len(data.split(',')) == 23):
+		if(len(data.split(',')) == 31):
 			with open("exData.csv", 'ab') as f:
 				f.write(data)
 
 			dataList = data.split(',')
 			acc = float(dataList[3])
-			motor = float(dataList[21])
+			motor = float(dataList[29])
 			alt = float(dataList[9]) * 3.2808399
 			if(ground == 0.0):
 				ground = alt

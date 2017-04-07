@@ -10,16 +10,21 @@ class TargetID(object):
 		self.data = {}
 		self.index = 0
 		self.rocketMask = cv2.imread("/home/pi/Desktop/PSLT-Fullscale/Data/mask.jpg")
+		#self.rocketMask = cv2.imread("C:\\Users\\admin\\Desktop\\mask.jpg")
 		#self.Update()
 		
 	def Update(self):
-		#frame = cv2.imread("C:\\Users\\Alex\\Desktop\\test.jpg")
+		#start = time.time()
+		#frame = cv2.imread("C:\\Users\\admin\\Desktop\\test.jpg")
 		frame = cv2.imread("/home/pi/Desktop/PSLT-Fullscale/Data/img.jpg")
 		#hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 		hsv = frame
 		boundaries = [
-		([70, 60, 80], [100, 90, 110])
+		([70, 20, 0], [110, 40, 50]),#blue
+		([50, 0, 150], [70, 20, 180]),#red
+		([0, 150, 150], [100, 255, 255])#yellow
 		]
+		output = copy.copy(frame)
 		for i, (lower, upper) in enumerate(boundaries):
 			lower = np.array(lower, dtype = "uint8")
 			upper = np.array(upper, dtype = "uint8")
@@ -103,23 +108,16 @@ class TargetID(object):
 			#print iHeight
 			#print iWidth
 			#print failed			
+			
 				
 			if(not failed):
-				output = copy.copy(frame)
 				cv2.rectangle(output,(left, top),(left+iWidth, top+iHeight),(0,255,0))
 
-				#cv2.imshow("images", np.hstack([frame, output])); cv2.waitKey(0)
-				
-				
-				#-----this is temporary-----
-				cv2.imwrite("/home/pi/Desktop/PSLT-Fullscale/Data/output{0}.jpg".format(self.index), output)
-				#---------------------------
 			else:
 				top = -1
 				bottom = -1
 				left = -1
 				right = -1
-				cv2.imwrite("/home/pi/Desktop/PSLT-Fullscale/Data/output{0}.jpg".format(self.index), frame)
 				
 			if(i == 0):
 				self.data["bTop"] = top
@@ -137,6 +135,10 @@ class TargetID(object):
 				self.data["yLeft"] = left
 				self.data["yRight"] = right
 				
+		print(time.time() - start)
+		#cv2.imshow("images", np.hstack([frame, output]))
+		#cv2.waitKey(0)
+		cv2.imwrite("/home/pi/Desktop/PSLT-Fullscale/Data/output{0}.jpg".format(self.index), output)
 		self.data["index"] = self.index
 		self.index += 1
 		self.data["time"] = time.time()

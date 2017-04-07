@@ -10,10 +10,10 @@ class MotorController(object):
 		done = False
 
 		diff = self.rotRate - self.burnoutRoll
-		if(math.fabs(diff) > 100):
+		if(math.fabs(diff) > 20):
 			speed = 1.0 if diff >= 0.0 else -1.0
 		elif(math.fabs(diff) > 2):
-			speed = diff / 100.0
+			speed = diff / 20.0
 		else:
 			speed = 0.0
 			done = True
@@ -29,9 +29,9 @@ class MotorController(object):
 		self.startRot = rotation
 		self.burnoutRoll = rollRate
 		if(rollRate > 0.0): #CW
-			self.setMotorSpeed(-1.0)
-		else: #CCW
 			self.setMotorSpeed(1.0)
+		else: #CCW
+			self.setMotorSpeed(-1.0)
 		self.distRot = 0
 
 	def setMotorSpeed(self, speed):

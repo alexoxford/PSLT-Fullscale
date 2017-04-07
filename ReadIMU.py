@@ -1,6 +1,7 @@
 import time
 from lsm.altimu import AltIMU
 import math
+from fusion import Fusion
 
 class ReadIMU(object):
 
@@ -29,6 +30,16 @@ class ReadIMU(object):
 		#self.dRoll = 0.0
 		self.lastTime = time.time()
 		self.data = {}
+		
+		with open("/home/pi/Desktop/PSLT-Fullscale/Data/magOffsets.txt", "wb") as f:
+			offsets = f.readLine()
+			offsetList = offsets.split(',')
+			self.magYOffset = offsetList[0]
+			self.magZOffset = offsetList[1]
+		
+		#self.fus = Fusion()
+		#startCal = time.time()
+		#self.fus.calibrate(self.imu.getMagnetometerRaw(), lambda: (time.time() - startCal) > 30)
 
 	def Update(self):
 		errs = 0
@@ -53,7 +64,7 @@ class ReadIMU(object):
 
 		magList = self.imu.getMagnetometerRaw()
 		
-		dRoll = self.angle_between((magList[1], magList[2] - 4500), (self.lastMagList[1], self.lastMagList[2] - 4500))
+		dRoll = self.angle_between((magList[1] - self.magYOffset, magList[2] - self.magZOffset), (self.lastMagList[1] - self.magYOffset, self.lastMagList[2] - self.magZOffset))
 
 		for i, mag in enumerate(magList):
 			if(not mag == None):
@@ -61,7 +72,7 @@ class ReadIMU(object):
 			else:
 				errs += 1
 
-		roll = math.degrees(math.atan2(self.lastMagList[1], self.lastMagList[2] - 4500) + math.pi)
+		roll = math.degrees(math.atan2(self.lastMagList[1] - self.magYOffset, self.lastMagList[2] - self.magZOffset) + math.pi)
 		
 		rollThreshold = 1
 		dTime = time.time() - self.lastTime

@@ -58,18 +58,21 @@ class Driver(object):
 		data += str(dictIMU["errs"]) + ','
 		data += str(dictIMU["time"]) + ','
 		
-		#data += str(dictVid["rTop"]) + ','
-		#data += str(dictVid["rBottom"]) + ','
-		#data += str(dictVid["rLeft"]) + ','
-		#data += str(dictVid["rRight"]) + ','
 		data += str(dictVid["bTop"]) + ','
 		data += str(dictVid["bBottom"]) + ','
 		data += str(dictVid["bLeft"]) + ','
 		data += str(dictVid["bRight"]) + ','
-		#data += str(dictVid["yTop"]) + ','
-		#data += str(dictVid["yBottom"]) + ','
-		#data += str(dictVid["yLeft"]) + ','
-		#data += str(dictVid["yRight"]) + ','
+		
+		data += str(dictVid["rTop"]) + ','
+		data += str(dictVid["rBottom"]) + ','
+		data += str(dictVid["rLeft"]) + ','
+		data += str(dictVid["rRight"]) + ','
+		
+		data += str(dictVid["yTop"]) + ','
+		data += str(dictVid["yBottom"]) + ','
+		data += str(dictVid["yLeft"]) + ','
+		data += str(dictVid["yRight"]) + ','
+		
 		data += str(dictVid["index"]) + ','
 		data += str(dictVid["time"]) + ','
 		
@@ -134,8 +137,8 @@ class Driver(object):
 		self.tid = TargetID()
 		self.gpsHeader = "Lat,Lon"
 		self.imuHeader = "Acc X,Acc Y,Acc Z,Mag X,Mag Y,Mag Z,Alt,Roll,Roll Rate,Delta Roll,IMU Errors,IMU Time"
-		#self.vidHeader = "R Top,R Bottom,R Left,R Right,B Top,B Bottom,B Left,B Right,Y Top,Y Bottom,Y Left,Y Right,Vid Index,Vid Time"
-		self.vidHeader = "B Top,B Bottom,B Left,B Right,Vid Index,Vid Time"
+		self.vidHeader = "B Top,B Bottom,B Left,B Right,R Top,R Bottom,R Left,R Right,Y Top,Y Bottom,Y Left,Y Right,Vid Index,Vid Time"
+		#self.vidHeader = "B Top,B Bottom,B Left,B Right,Vid Index,Vid Time"
 		self.index = 0
 		self.vidProc = False
 		self.gpsProc = False
@@ -187,7 +190,7 @@ class Driver(object):
 			print("BURNOUT ROLL: " + str(self.mc.burnoutRoll))
 			print("ROLL")
 			self.flightState = 2
-		if(((self.flightState == 2) & ((time.time() - self.launchTime) > 9))):
+		if(((self.flightState == 2) & ((time.time() - self.launchTime) > 9)) & (self.mc.rotate != 2)):
 			self.mc.rotate = 2
 			self.mc.setMotorSpeed(0.0)
 			print("COUNTER ROLL")
