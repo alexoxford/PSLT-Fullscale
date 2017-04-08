@@ -3,6 +3,7 @@ from lsm.altimu import AltIMU
 import math
 
 imu = AltIMU()
+imu.enable(True, True, True, True, True)
 yList = []
 zList = []
 
