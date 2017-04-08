@@ -32,7 +32,7 @@ class ReadIMU(object):
 		self.data = {}
 		
 		with open("/home/pi/Desktop/PSLT-Fullscale/Data/magOffsets.txt", "wb") as f:
-			offsets = f.readLine()
+			offsets = f.readline()
 			offsetList = offsets.split(',')
 			self.magYOffset = offsetList[0]
 			self.magZOffset = offsetList[1]
