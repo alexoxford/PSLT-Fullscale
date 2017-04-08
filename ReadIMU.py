@@ -34,8 +34,8 @@ class ReadIMU(object):
 		with open("/home/pi/Desktop/PSLT-Fullscale/Data/magOffsets.txt", "r") as f:
 			offsets = f.readline()
 			offsetList = offsets.split(',')
-			self.magYOffset = offsetList[0]
-			self.magZOffset = offsetList[1]
+			self.magYOffset = int(offsetList[0])
+			self.magZOffset = int(offsetList[1])
 		
 		#self.fus = Fusion()
 		#startCal = time.time()
