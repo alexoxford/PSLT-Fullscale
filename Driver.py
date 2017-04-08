@@ -1,6 +1,7 @@
 import time
 import subprocess
 import os
+import sys
 import math
 import threading
 import numpy as np
@@ -158,10 +159,12 @@ class Driver(object):
 		
 		self.tid.Update()
 		print("Initialization finished")
+		sys.stdout.flush()
 		quit = False
 		while(not quit):
 			try:
 				self.Update()
+				sys.stdout.flush()
 			except KeyboardInterrupt:
 				self.End()
 				quit = True
@@ -256,5 +259,6 @@ class Driver(object):
 		self.mc.End()
 		self.tid.End()
 		print("Driver is ending")
+		sys.stdout.flush()
 		
 if __name__ == "__main__": Driver()
