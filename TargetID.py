@@ -135,7 +135,7 @@ class TargetID(object):
 				self.data["yLeft"] = left
 				self.data["yRight"] = right
 				
-		print(time.time() - start)
+		#print(time.time() - start)
 		#cv2.imshow("images", np.hstack([frame, output]))
 		#cv2.waitKey(0)
 		cv2.imwrite("/home/pi/Desktop/PSLT-Fullscale/Data/output{0}.jpg".format(self.index), output)
