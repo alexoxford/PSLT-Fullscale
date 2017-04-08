@@ -31,7 +31,7 @@ class ReadIMU(object):
 		self.lastTime = time.time()
 		self.data = {}
 		
-		with open("/home/pi/Desktop/PSLT-Fullscale/Data/magOffsets.txt", "wb") as f:
+		with open("/home/pi/Desktop/PSLT-Fullscale/Data/magOffsets.txt", "r") as f:
 			offsets = f.readline()
 			offsetList = offsets.split(',')
 			self.magYOffset = offsetList[0]
