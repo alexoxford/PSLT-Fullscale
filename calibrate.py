@@ -15,8 +15,8 @@ print "Begin Rotation"
 
 while(not done):
 	magList = imu.getMagnetometerRaw()
-	yList.append([magList[1]])
-	zList.append([magList[2]])
+	yList.append(int(magList[1]))
+	zList.append(int(magList[2]))
 	if((time.time() - startTime) > 10):
 		done = True
 
